@@ -82,9 +82,7 @@ public class ShuffleBoard extends SubsystemBase
         SmartDashboard.putBoolean("FMS", DriverStation.isFMSAttached());
         SmartDashboard.putBoolean("Overload", false);
         SmartDashboard.putNumber("AirPressure", 0);
-        SmartDashboard.putBoolean("AltDriveMode", false);
-        SmartDashboard.putBoolean("SteeringAssist", false);
-        SmartDashboard.putBoolean("Brake", false);
+        SmartDashboard.putBoolean("Field Oriented", false);
         SmartDashboard.putBoolean("TargetLocked", false);
         SmartDashboard.putBoolean("Autonomous Active", false);
     }

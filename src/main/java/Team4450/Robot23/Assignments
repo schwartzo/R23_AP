@@ -114,6 +114,7 @@ FMS						boolean			True when robot is connected to the FMS.
 Low Battery				boolean			True when battery is low.
 Overload				boolean			True when brownout has occurred.
 Auto Program            Chooser         List of autonomous programs.
+Field Oriented          boolean         True when swerve drive is in field orientation mode.
 
 
 Drive Base gearbox ratios: SDS Level 1 for approx 9.28 f/s or 3 m/s.

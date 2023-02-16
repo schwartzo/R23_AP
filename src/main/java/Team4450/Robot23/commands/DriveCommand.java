@@ -82,6 +82,15 @@ public class DriveCommand extends CommandBase
         strafe = slewY.calculate(strafe);
         rotation = slewRot.calculate(rotation);
 
+        // "Slow" mode. Caps speed while bumper held down.
+
+        if (controller.getLeftBumper())
+        {
+            throttle = Util.clampValue(throttle, .30);
+            strafe = Util.clampValue(strafe, .30);
+            rotation = Util.clampValue(rotation, .30);
+        }
+
         driveBase.drive(throttle, strafe, rotation);
     }
 
