@@ -3,6 +3,7 @@ package Team4450.Robot23.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static Team4450.Robot23.Constants.*;
 
@@ -12,7 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import Team4450.Lib.Util;
 
-public class Winch extends CommandBase {
+public class Winch extends SubsystemBase {
     private CANSparkMax winchMotor = new CANSparkMax(ARM_MOTOR, MotorType.kBrushless);
     private RelativeEncoder winchEncoder = winchMotor.getEncoder();
     private DigitalInput winchLimiter = new DigitalInput(ARM_SWITCH);
