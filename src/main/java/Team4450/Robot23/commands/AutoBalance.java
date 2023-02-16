@@ -9,7 +9,7 @@ import Team4450.Robot23.subsystems.DriveBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutoBalance extends CommandBase {
-    private DriveBase driveBase;
+    private final DriveBase driveBase;
 
     private double pitch; // Rotation around x axis
     private double yaw; // Rotation around z axis
@@ -17,7 +17,11 @@ public class AutoBalance extends CommandBase {
     private SynchronousPID pidController;
 
     AutoBalance(DriveBase driveBase) {
+        Util.consoleLog();
+
         this.driveBase = driveBase;
+
+        addRequirements(driveBase);
     }
 
     public void initialize() {
