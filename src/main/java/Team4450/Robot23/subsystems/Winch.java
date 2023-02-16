@@ -45,8 +45,12 @@ public class Winch extends SubsystemBase {
         winchMotor.stopMotor();
     }
 
-    public double getCurrentPosition() {
+    public double CURRENT_WINCH_ROTATIONS() {
         return winchEncoder.getPosition();
+    }
+
+    public double getMaxPosition() {
+        return MAX_WINCH_ROTATIONS;
     }
 
     public boolean maxDownwardRotation() {
@@ -58,9 +62,5 @@ public class Winch extends SubsystemBase {
 
         SmartDashboard.putString("Winch rotation is at ", winchPercent + "%");
         SmartDashboard.putNumber("Current winch power is ", winchMotor.get());
-    }
-
-    private double CURRENT_WINCH_ROTATIONS() {
-        return winchEncoder.getPosition();
     }
 }

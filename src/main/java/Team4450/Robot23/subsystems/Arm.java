@@ -45,8 +45,12 @@ public class Arm extends SubsystemBase {
         extenderMotor.stopMotor();
     }
 
-    public double getCurrentPosition() {
+    public double CURRENT_ARM_ROTATIONS() {
         return extenderEncoder.getPosition();
+    }
+
+    public double getMaxPosition() {
+        return MAX_ARM_ROTATIONS;
     }
 
     public boolean fullyRetracted() {
@@ -58,9 +62,5 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putString("Extension is extened by ", extensionPercent + "%");
         SmartDashboard.putNumber("Current extension power is ", extenderMotor.get());
-    }
-
-    private double CURRENT_ARM_ROTATIONS() {
-        return extenderEncoder.getPosition();
     }
 }
