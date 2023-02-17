@@ -16,7 +16,7 @@ import Team4450.Lib.Util;
 public class Claw extends SubsystemBase {
     private TalonFX clawMotor = new TalonFX(CLAW_MOTOR);
     private FXEncoder clawEncoder = new FXEncoder();;
-    private DigitalInput clawLimiter = new DigitalInput(ARM_SWITCH);
+    private DigitalInput clawLimiter = new DigitalInput(CLAW_SWITCH);
 
     private final double MAX_CLAW_ENCODER_COUNT = 1000;
 

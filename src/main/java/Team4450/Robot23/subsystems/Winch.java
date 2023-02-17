@@ -13,9 +13,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import Team4450.Lib.Util;
 
 public class Winch extends SubsystemBase {
-    private CANSparkMax winchMotor = new CANSparkMax(ARM_MOTOR, MotorType.kBrushless);
+    private CANSparkMax winchMotor = new CANSparkMax(WINCH_MOTOR, MotorType.kBrushless);
     private RelativeEncoder winchEncoder = winchMotor.getEncoder();
-    private DigitalInput winchLimiter = new DigitalInput(ARM_SWITCH);
+    private DigitalInput winchLimiter = new DigitalInput(WINCH_SWITCH);
 
     private final double MAX_WINCH_ROTATIONS = 1000;
 
