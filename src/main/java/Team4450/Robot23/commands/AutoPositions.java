@@ -6,7 +6,9 @@ import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.Winch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class AutoPositions extends CommandBase {
     private boolean doingComboState = false;
@@ -14,12 +16,16 @@ public class AutoPositions extends CommandBase {
     private Winch winch;
     private Claw claw;
 
+    private ParallelCommandGroup commands = null;
+    private Command armCommand = null;
+    private Command winchCommand;
+    private Command clawCommand;
+
     AutoPositions(Arm arm, Winch winch, Claw claw) {
         this.arm = arm;
         this.winch = winch;
         this.claw = claw;
     }
-
 
     // enum's for all the names of the different pre-set states.
     public enum ArmStateNames {
@@ -38,20 +44,17 @@ public class AutoPositions extends CommandBase {
         FULLY_OPEN, HOLDING_CUBE, HOLDING_CONE, CLOSED
     }
 
-    // Debugging info
-    private ArmStateNames lastArmState;
-    private WinchStateNames lastWinchState;
-    private ComboStateNames lastComboState;
-    private ClawStates lastClawState;
+    // Chosen state and debugging info
+    private ComboStateNames comboState;
+    private ArmStateNames armState;
+    private WinchStateNames winchState;
+    private ClawStates clawState;
 
     // HashMap's containing the revolution amounts for certain states for the Arm,
     // Winch, and Claw
     private HashMap<ArmStateNames, Double> armStates = new HashMap<ArmStateNames, Double>();
     private HashMap<WinchStateNames, Double> winchStates = new HashMap<WinchStateNames, Double>();
     private HashMap<ClawStates, Double> clawStates = new HashMap<ClawStates, Double>();
-
-    // The rest of the constructor variables
-
 
     public void initialize() {
         // Creating inital states, where the doubles are target revolutions
@@ -77,15 +80,22 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStates.HOLDING_CONE, 0.0);
         clawStates.put(ClawStates.CLOSED, 0.0);
 
-        // Setting initial states
-        
+        commands = new ParallelCommandGroup();
+
+        // Sets the commands
+        armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
+        winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
+        clawCommand = new AutoClaw(claw, (doingComboState) ? armStates.get(comboState) : clawStates.get(clawState), 0);
+
+        commands.schedule();
+
         updateDS();
     }
 
     private void updateDS() {
-        SmartDashboard.putString("Most recent arm/winch combo state is ", lastComboState.toString());
-        SmartDashboard.putString("Most recent arm state is ", lastArmState.toString());
-        SmartDashboard.putString("Most recent winch state is ", lastWinchState.toString());
-        SmartDashboard.putString("Most recent claw state is ", lastClawState.toString());
+        SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
+        SmartDashboard.putString("Most recent arm state is ", armState.toString());
+        SmartDashboard.putString("Most recent winch state is ", winchState.toString());
+        SmartDashboard.putString("Most recent claw state is ", clawState.toString());
     }
 }
