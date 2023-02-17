@@ -87,6 +87,9 @@ public class AutoPositions extends CommandBase {
         winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
         clawCommand = new AutoClaw(claw, (doingComboState) ? armStates.get(comboState) : clawStates.get(clawState), 0);
 
+        // Adds the commands
+        commands.addCommands(armCommand, winchCommand, clawCommand);
+
         commands.schedule();
 
         updateDS();
