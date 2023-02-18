@@ -80,6 +80,6 @@ public class ChargeStationAuto extends CommandBase {
 
     @Override
 	public boolean isFinished() {
-        return true;
+        return !commands.isScheduled();
     }
 }

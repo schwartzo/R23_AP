@@ -57,7 +57,7 @@ public class DoubleConeAuto extends CommandBase {
         commands.addCommands(command);
 
         // Rotate again so you are facing torwards the cone
-        command = new AutoRotate(drivebase, 0);
+        command = new AutoRotate(drivebase, 180);
         commands.addCommands(command);
 
         // Pickup the cone
@@ -73,7 +73,7 @@ public class DoubleConeAuto extends CommandBase {
         commands.addCommands(command);
 
         // Move slightly to the right to line it up with a new cone placement pole
-        command = new AutoStrafeProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
+        command = new AutoStrafeProfiled(drivebase, -0, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Possibly need to move robot slightly forward? I do not know
@@ -102,6 +102,6 @@ public class DoubleConeAuto extends CommandBase {
 
     @Override
 	public boolean isFinished() {
-        return true;
+        return !commands.isScheduled();
     }
 }
