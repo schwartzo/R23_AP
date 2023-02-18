@@ -13,6 +13,11 @@ public class AutoBalance extends CommandBase {
 
     private double pitch; // Rotation around x axis
     private double yaw; // Rotation around z axis
+    private double degreeLeeway = 10;
+
+    // A speed that shouldn't ever happen in this, so can be used for checking if we
+    // are skipping the rotation part
+    private double initialSpeed = 0.0;
 
     private SynchronousPID pidController;
 
@@ -24,8 +29,20 @@ public class AutoBalance extends CommandBase {
         addRequirements(this.driveBase);
     }
 
+    public AutoBalance(DriveBase driveBase, double speed) {
+        Util.consoleLog();
+
+        this.driveBase = driveBase;
+        this.initialSpeed = speed;
+
+        addRequirements(this.driveBase);
+    }
+
     public void initialize() {
-        resetYaw();
+        if (initialSpeed == 0)
+            resetYaw();
+        else
+            balanceRobot(initialSpeed);
     }
 
     private void recalibrateRotation() {
@@ -60,17 +77,17 @@ public class AutoBalance extends CommandBase {
 
         // If the robot is facing the ramp move forward, otherwise that means the robot
         // is facing away from the ramp (and is rotated 180 degrees) so move backward
-        balanceRobot(10, (yaw == 0) ? 1 : -1);
+        balanceRobot((yaw == 0) ? 0.5 : -0.5);
     }
 
-    public void balanceRobot(double leeway, int speed) {
+    public void balanceRobot(double speed) {
         // In case the robot starts entirely off the ramp. Even if it doesnt start off
         // the ramp it doesn't matter as if its already on the ramp angled past leeway
         // then it skips this, and if its on top of the ramp then it will get off, but
         // the rest will move it back on. Also, why would this be called if we already
         // flat on charging station?
         driveBase.drive(speed, 0, 0);
-        while (Math.abs(pitch) <= leeway) {
+        while (Math.abs(pitch) <= degreeLeeway) {
             recalibrateRotation();
         }
 
@@ -82,7 +99,7 @@ public class AutoBalance extends CommandBase {
         speed = (pitch - 180) > 0 ? 1 : -1;
         driveBase.drive(speed, 0, 0);
 
-        while (Math.abs(pitch) > leeway) {
+        while (Math.abs(pitch) > degreeLeeway) {
             recalibrateRotation();
         }
 

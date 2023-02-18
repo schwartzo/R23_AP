@@ -53,7 +53,7 @@ public class ChargeStationAuto extends CommandBase {
         command = new AutoPositions(arm, winch, claw, null, null, ClawStateNames.FULLY_OPEN);
         commands.addCommands(command);
 
-        // Exit the community zone (currently backwards as the robot is rotated 180 degrees from first step)
+        // Exit the community zone
         command = new AutoDriveProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
@@ -62,7 +62,7 @@ public class ChargeStationAuto extends CommandBase {
         commands.addCommands(command);
 
         // Get on the charging station
-        command = new AutoBalance(drivebase);
+        command = new AutoBalance(drivebase, -0.5);
         commands.addCommands(command);
 
         // Make it run
