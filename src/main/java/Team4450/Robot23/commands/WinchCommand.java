@@ -15,7 +15,7 @@ public class WinchCommand extends CommandBase {
         this.winch = winch;
         this.winchPower = winchPower;
 
-        addRequirements(winch);
+        addRequirements(this.winch);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ArmCommand extends CommandBase {
         this.arm = arm;
         this.armPower = armPower;
 
-        addRequirements(arm);
+        addRequirements(this.arm);
     }
 
     @Override

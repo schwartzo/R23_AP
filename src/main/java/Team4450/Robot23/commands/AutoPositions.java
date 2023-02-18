@@ -21,7 +21,7 @@ public class AutoPositions extends CommandBase {
     private Command winchCommand;
     private Command clawCommand;
 
-    AutoPositions(Arm arm, Winch winch, Claw claw, ComboStateNames comboState) {
+    public AutoPositions(Arm arm, Winch winch, Claw claw, ComboStateNames comboState) {
         doingComboState = true;
 
         this.arm = arm;
@@ -29,9 +29,13 @@ public class AutoPositions extends CommandBase {
         this.claw = claw;
 
         this.comboState = comboState;
+
+        addRequirements(this.arm);
+        addRequirements(this.winch);
+        addRequirements(this.claw);
     }
 
-    AutoPositions(Arm arm, Winch winch, Claw claw, 
+    public AutoPositions(Arm arm, Winch winch, Claw claw, 
                 ArmStateNames armState, WinchStateNames winchState, ClawStateNames clawState) {
         doingComboState = false;
 
@@ -42,6 +46,10 @@ public class AutoPositions extends CommandBase {
         this.armState = armState;
         this.winchState = winchState;
         this.clawState = clawState;
+
+        addRequirements(this.arm);
+        addRequirements(this.winch);
+        addRequirements(this.claw);
     }
 
     // enum's for all the names of the different pre-set states.
@@ -100,9 +108,11 @@ public class AutoPositions extends CommandBase {
         commands = new ParallelCommandGroup();
 
         // Sets the commands
-        armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
-        winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
-        if (comboState == ComboStateNames.OBJECT_PICKUP)
+        if (armCommand != null)
+            armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
+        if (winchCommand != null)
+            winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
+        if (clawCommand != null && comboState == ComboStateNames.OBJECT_PICKUP)
             clawCommand = new AutoClaw(claw, clawStates.get(ClawStateNames.FULLY_OPEN), 0);
 
         // Adds the commands

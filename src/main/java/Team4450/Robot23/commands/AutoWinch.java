@@ -21,6 +21,8 @@ public class AutoWinch extends CommandBase {
         this.winch = winch;
         this.targetRevolutions = targetRevolutions;
         this.tolerance = tolerance;
+
+        addRequirements(this.winch);
     }
 
     @Override

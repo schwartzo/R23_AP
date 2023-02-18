@@ -21,6 +21,8 @@ public class AutoArm extends CommandBase {
         this.arm = arm;
         this.targetRevolutions = targetRevolutions;
         this.tolerance = tolerance;
+
+        addRequirements(this.arm);
     }
 
     @Override

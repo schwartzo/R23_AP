@@ -16,12 +16,12 @@ public class AutoBalance extends CommandBase {
 
     private SynchronousPID pidController;
 
-    AutoBalance(DriveBase driveBase) {
+    public AutoBalance(DriveBase driveBase) {
         Util.consoleLog();
 
         this.driveBase = driveBase;
 
-        addRequirements(driveBase);
+        addRequirements(this.driveBase);
     }
 
     public void initialize() {

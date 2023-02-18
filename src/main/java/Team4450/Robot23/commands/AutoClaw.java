@@ -21,6 +21,8 @@ public class AutoClaw extends CommandBase {
         this.claw = claw;
         this.targetRevolutions = targetRevolutions;
         this.tolerance = tolerance;
+
+        addRequirements(this.claw);
     }
 
     @Override
