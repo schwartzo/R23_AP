@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class ChargeStationAuto extends CommandBase {
+public class DoubleConeAuto extends CommandBase {
     DriveBase drivebase;
     Arm arm;
     Winch winch;
@@ -23,7 +23,7 @@ public class ChargeStationAuto extends CommandBase {
     SequentialCommandGroup commands;
     Command command;
 
-    public ChargeStationAuto(DriveBase drivebase, Arm arm, Winch winch, Claw claw) {
+    public DoubleConeAuto(DriveBase drivebase, Arm arm, Winch winch, Claw claw) {
         this.drivebase = drivebase;
 
         addRequirements(this.drivebase);
@@ -52,17 +52,39 @@ public class ChargeStationAuto extends CommandBase {
         command = new AutoPositions(arm, winch, claw, null, null, ClawStateNames.FULLY_OPEN);
         commands.addCommands(command);
 
-        // Exit the community zone
+        // Exit the community zone to go get another cone
         command = new AutoDriveProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
-        // Move in front of the charging station
+        // Rotate again so you are facing torwards the cone
+        command = new AutoRotate(drivebase, 0);
+        commands.addCommands(command);
+
+        // Pickup the cone
+        command = new AutoPositions(arm, winch, claw, ComboStateNames.OBJECT_PICKUP);
+        commands.addCommands(command);
+
+        // Rotate again to face torwards the placement location
+        command = new AutoRotate(drivebase, 180);
+        commands.addCommands(command);
+
+        // Move to the cone placement location
+        command = new AutoDriveProfiled(drivebase, -0, StopMotors.stop, Brakes.on);
+        commands.addCommands(command);
+
+        // Move slightly to the right to line it up with a new cone placement pole
         command = new AutoStrafeProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
-        // Get on the charging station
-        command = new AutoBalance(drivebase, -0.5);
+        // Possibly need to move robot slightly forward? I do not know
+
+        // Move set arm and winch up for target scoring position
+        command = new AutoPositions(arm, winch, claw, ComboStateNames.HIGHEST_SCORING);
         commands.addCommands(command);
+
+        // Drop the cone
+        command = new AutoPositions(arm, winch, claw, null, null, ClawStateNames.FULLY_OPEN);
+        commands.addCommands(command);        
 
         // Make it run
         commands.schedule();
