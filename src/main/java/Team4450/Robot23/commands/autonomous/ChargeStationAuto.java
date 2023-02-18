@@ -1,5 +1,7 @@
 package Team4450.Robot23.commands.autonomous;
 
+import static Team4450.Robot23.Constants.*;
+
 import Team4450.Robot23.commands.AutoBalance;
 import Team4450.Robot23.commands.AutoPositions;
 import Team4450.Robot23.commands.AutoPositions.ClawStateNames;
@@ -15,18 +17,21 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class ChargeStationAuto extends CommandBase {
-    DriveBase drivebase;
-    Arm arm;
-    Winch winch;
-    Claw claw;
+    private final DriveBase driveBase;
+    private final Arm arm;
+    private final Winch winch;
+    private final Claw claw;
     
-    SequentialCommandGroup commands;
-    Command command;
+    private SequentialCommandGroup commands = null;
+    private Command command = null;
 
-    public ChargeStationAuto(DriveBase drivebase, Arm arm, Winch winch, Claw claw) {
-        this.drivebase = drivebase;
+    public ChargeStationAuto(DriveBase driveBase, Arm arm, Winch winch, Claw claw) {
+        this.driveBase = driveBase;
+        this.arm = arm;
+        this.winch = winch;
+        this.claw = claw;
 
-        addRequirements(this.drivebase);
+        addRequirements(this.driveBase);
         addRequirements(this.arm);
         addRequirements(this.winch);
         addRequirements(this.claw);
@@ -34,12 +39,10 @@ public class ChargeStationAuto extends CommandBase {
 
     @Override
     public void initialize() {
-        // Pre-command code for information
-        
-        
-        // MOST OF THE VALUES ARE CURRENLY PLACEHOLDER
+        commands = new SequentialCommandGroup();
+
         // Rotate robot torwards target scoring position. Done before letting arm and winch move so it doesn't accidently run into anything.
-        command = new AutoRotate(drivebase, 180);
+        command = new AutoRotate(driveBase, 180);
         commands.addCommands(command);
 
         // Move set arm and winch up for target scoring position
@@ -51,18 +54,17 @@ public class ChargeStationAuto extends CommandBase {
         commands.addCommands(command);
 
         // Exit the community zone
-        command = new AutoDriveProfiled(drivebase, 3.7, StopMotors.stop, Brakes.on);
+        command = new AutoDriveProfiled(driveBase, 3.7, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Move in front of the charging station
-        command = new AutoStrafeProfiled(drivebase, 2.4, StopMotors.stop, Brakes.on);
+        command = new AutoStrafeProfiled(driveBase, 2.4, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Get on the charging station
-        command = new AutoBalance(drivebase, -0.5);
+        command = new AutoBalance(driveBase, -0.5);
         commands.addCommands(command);
 
-        // Make it run
         commands.schedule();
     }
 
@@ -73,7 +75,7 @@ public class ChargeStationAuto extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        driveBase.drive(0, 0, 0);
     }
 
     @Override

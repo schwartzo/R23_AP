@@ -19,12 +19,16 @@ import Team4450.Lib.Util;
 import Team4450.Robot23.commands.DriveCommand;
 import Team4450.Robot23.commands.SetToStartPositionCommand;
 import Team4450.Robot23.commands.Utility.NotifierCommand;
+import Team4450.Robot23.commands.autonomous.ChargeStationAuto;
+import Team4450.Robot23.commands.autonomous.DoubleConeAuto;
 import Team4450.Robot23.commands.autonomous.TestAuto1;
 import Team4450.Robot23.commands.autonomous.TestAuto3;
 import Team4450.Robot23.commands.autonomous.TestAuto4;
+import Team4450.Robot23.subsystems.Arm;
+import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
 import Team4450.Robot23.subsystems.ShuffleBoard;
-
+import Team4450.Robot23.subsystems.Winch;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -55,6 +59,9 @@ public class RobotContainer
 
 	public static ShuffleBoard	shuffleBoard;
 	public static DriveBase 	driveBase;
+	public static Arm			arm;
+	public static Winch			winch;
+	public static Claw			claw;
 
 	// Subsystem Default Commands.
 
@@ -109,7 +116,9 @@ public class RobotContainer
 		NoProgram,
 		TestAuto1,
 		TestAuto3,
-		TestAuto4
+		TestAuto4,
+		ChargeStationAuto,
+		DoubleConeAuto
 	}
 
 	public static Pose2d	defaultStartingPose;
@@ -378,6 +387,14 @@ public class RobotContainer
 			case TestAuto4:
 			 	autoCommand = new TestAuto4(driveBase, startingPose);
 			 	break;
+
+			case ChargeStationAuto:
+				autoCommand = new ChargeStationAuto(driveBase, arm, winch, claw);
+				break;
+			
+			case DoubleConeAuto:
+				autoCommand = new DoubleConeAuto(driveBase, arm, winch, claw);
+				break;
 		}
         
 		return autoCommand;
@@ -396,7 +413,9 @@ public class RobotContainer
 		autoChooser.setDefaultOption("No Program", AutoProgram.NoProgram);
 		autoChooser.addOption("Test Auto 1", AutoProgram.TestAuto1);		
 		autoChooser.addOption("Test Auto 3", AutoProgram.TestAuto3);		
-		autoChooser.addOption("Test Auto 4", AutoProgram.TestAuto4);		
+		autoChooser.addOption("Test Auto 4", AutoProgram.TestAuto4);
+		autoChooser.addOption("ChargeStationAuto", AutoProgram.ChargeStationAuto);
+		autoChooser.addOption("DoubleConeAuto", AutoProgram.DoubleConeAuto);
 				
 		SmartDashboard.putData(autoChooser);
 	}
