@@ -37,12 +37,9 @@ public class DoubleConeAuto extends CommandBase {
         // Pre-command code for information
         
         
-        // MOST OF THE VALUES ARE CURRENLY PLACEHOLDER
         // Rotate robot torwards target scoring position. Done before letting arm and winch move so it doesn't accidently run into anything.
         command = new AutoRotate(drivebase, 180);
         commands.addCommands(command);
-
-        // Possibly need to move robot slightly forward? I do not know
 
         // Move set arm and winch up for target scoring position
         command = new AutoPositions(arm, winch, claw, ComboStateNames.HIGHEST_SCORING);
@@ -52,31 +49,36 @@ public class DoubleConeAuto extends CommandBase {
         command = new AutoPositions(arm, winch, claw, null, null, ClawStateNames.FULLY_OPEN);
         commands.addCommands(command);
 
-        // Exit the community zone to go get another cone
-        command = new AutoDriveProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
+        // Pull in the arm
+        command = new AutoPositions(arm, winch, claw, ComboStateNames.FULLY_CONTAINED);
+        commands.addCommands(command);
+
+        // Exit the community zone to go get another cone (going less than the actual distance because the arm reaches out)
+        command = new AutoDriveProfiled(drivebase, 5.1, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Rotate again so you are facing torwards the cone
         command = new AutoRotate(drivebase, 180);
         commands.addCommands(command);
 
-        // Pickup the cone
+        // Prepare to pickup the cone
         command = new AutoPositions(arm, winch, claw, ComboStateNames.OBJECT_PICKUP);
         commands.addCommands(command);
+
+        // Pickup the cone
+        command = new AutoPositions(arm, winch, claw, null, null, ClawStateNames.HOLDING_CONE);
 
         // Rotate again to face torwards the placement location
         command = new AutoRotate(drivebase, 180);
         commands.addCommands(command);
 
         // Move to the cone placement location
-        command = new AutoDriveProfiled(drivebase, -0, StopMotors.stop, Brakes.on);
+        command = new AutoDriveProfiled(drivebase, -5.1, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Move slightly to the right to line it up with a new cone placement pole
-        command = new AutoStrafeProfiled(drivebase, -0, StopMotors.stop, Brakes.on);
+        command = new AutoStrafeProfiled(drivebase, -1.11, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
-
-        // Possibly need to move robot slightly forward? I do not know
 
         // Move set arm and winch up for target scoring position
         command = new AutoPositions(arm, winch, claw, ComboStateNames.HIGHEST_SCORING);

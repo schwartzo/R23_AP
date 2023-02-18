@@ -42,8 +42,6 @@ public class ChargeStationAuto extends CommandBase {
         command = new AutoRotate(drivebase, 180);
         commands.addCommands(command);
 
-        // Possibly need to move robot slightly forward? I do not know
-
         // Move set arm and winch up for target scoring position
         command = new AutoPositions(arm, winch, claw, ComboStateNames.HIGHEST_SCORING);
         commands.addCommands(command);
@@ -53,11 +51,11 @@ public class ChargeStationAuto extends CommandBase {
         commands.addCommands(command);
 
         // Exit the community zone
-        command = new AutoDriveProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
+        command = new AutoDriveProfiled(drivebase, 3.7, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Move in front of the charging station
-        command = new AutoStrafeProfiled(drivebase, 0, StopMotors.stop, Brakes.on);
+        command = new AutoStrafeProfiled(drivebase, 2.4, StopMotors.stop, Brakes.on);
         commands.addCommands(command);
 
         // Get on the charging station
