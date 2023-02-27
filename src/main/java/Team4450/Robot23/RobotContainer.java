@@ -191,6 +191,9 @@ public class RobotContainer
 
 		shuffleBoard = new ShuffleBoard();
 		driveBase = new DriveBase();
+		arm = new Arm();
+		winch = new Winch();
+		claw = new Claw();
 
 		// Create any persistent commands.
 

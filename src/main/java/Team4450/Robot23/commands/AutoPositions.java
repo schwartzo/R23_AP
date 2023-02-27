@@ -108,11 +108,11 @@ public class AutoPositions extends CommandBase {
         commands = new ParallelCommandGroup();
 
         // Sets the commands
-        if (armCommand != null)
+        if (armState != null)
             armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
-        if (winchCommand != null)
+        if (winchState != null)
             winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
-        if (clawCommand != null && comboState == ComboStateNames.OBJECT_PICKUP)
+        if (clawState != null && comboState == ComboStateNames.OBJECT_PICKUP)
             clawCommand = new AutoClaw(claw, clawStates.get(ClawStateNames.FULLY_OPEN), 0);
 
         // Adds the commands
