@@ -122,12 +122,12 @@ public class AutoPositions extends CommandBase {
         commands = new ParallelCommandGroup();
 
         // Sets and adds the commands
-        if (armState != null || comboState != null) {
+        if (armState != null || (doingComboState && comboState != null)) {
             armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboStates.get(comboState).armState) : armStates.get(armState), 0);
 	        commands.addCommands(armCommand);
 	    }
 
-        if (winchState != null || comboState != null) {
+        if (winchState != null || (doingComboState && comboState != null)) {
             winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboStates.get(comboState).winchState) : winchStates.get(winchState), 0);
 	        commands.addCommands(winchCommand);
 	    }
@@ -143,7 +143,7 @@ public class AutoPositions extends CommandBase {
     }
 
     private void updateDS() {
-        if ((doingComboState && comboState != null))
+        if (doingComboState && comboState != null)
             SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
         if ((doingComboState && comboState != null) || armState != null)
             SmartDashboard.putString("Most recent arm state is ", (doingComboState) ? comboState.toString() : armState.toString());
