@@ -29,6 +29,7 @@ public class AutoPositions extends CommandBase {
         this.claw = claw;
 
         this.comboState = comboState;
+        if (comboState == ComboStateNames.OBJECT_PICKUP) this.clawState = ClawStateNames.FULLY_OPEN;
 
         addRequirements(this.arm);
         addRequirements(this.winch);
@@ -137,7 +138,7 @@ public class AutoPositions extends CommandBase {
 	    }
         
         if (clawState != null || (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP)) {
-            clawCommand = new AutoClaw(claw, (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP) ? clawStates.get(ClawStateNames.FULLY_OPEN) : clawStates.get(clawState), 0);
+            clawCommand = new AutoClaw(claw, clawStates.get(clawState), 0);
             commands.addCommands(clawCommand);
 	    }
 
