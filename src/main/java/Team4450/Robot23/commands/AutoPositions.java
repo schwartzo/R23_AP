@@ -116,8 +116,12 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.HOLDING_CONE, 0.0);
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
-	    // comboStates
+        // comboStates
+	comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
         comboStates.put(ComboStateNames.OBJECT_PICKUP, new ComboState(ArmStateNames.OBJECT_PICKUP, WinchStateNames.OBJECT_PICKUP));
+        comboStates.put(ComboStateNames.LOWEST_SCORING, new ComboState(ArmStateNames.LOWEST_SCORING, WinchStateNames.LOWEST_SCORING));
+        comboStates.put(ComboStateNames.MIDDLE_SCORING, new ComboState(ArmStateNames.MIDDLE_SCORING, WinchStateNames.MIDDLE_SCORING));
+        comboStates.put(ComboStateNames.HIGHEST_SCORING, new ComboState(ArmStateNames.HIGHEST_SCORING, WinchStateNames.HIGHEST_SCORING));
 
         commands = new ParallelCommandGroup();
 
