@@ -153,7 +153,7 @@ public class AutoPositions extends CommandBase {
             SmartDashboard.putString("Most recent arm state is ", (doingComboState) ? comboState.toString() : armState.toString());
         if ((doingComboState && comboState != null) || winchState != null)
             SmartDashboard.putString("Most recent winch state is ", (doingComboState) ? comboState.toString() : winchState.toString());
-        if ((doingComboState && comboState != null) || clawState != null)
-            SmartDashboard.putString("Most recent claw state is ", clawState.toString());
+        if ((doingComboState && comboState == ComboStateNames.OBJECT_PICKUP) || clawState != null)
+            SmartDashboard.putString("Most recent claw state is ", (doingComboState) ? comboState.toString() : clawState.toString());
     }
 }
