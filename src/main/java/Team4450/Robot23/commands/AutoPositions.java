@@ -152,11 +152,11 @@ public class AutoPositions extends CommandBase {
     private void updateDS() {
         if (doingComboState && comboState != null)
             SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
-        if ((doingComboState && comboState != null) || armState != null)
+        if (armState != null)
             SmartDashboard.putString("Most recent arm state is ", armState.toString());
-        if ((doingComboState && comboState != null) || winchState != null)
+        if (winchState != null)
             SmartDashboard.putString("Most recent winch state is ", winchState.toString());
-        if ((doingComboState && comboState != null) || clawState != null)
+        if (clawState != null)
             SmartDashboard.putString("Most recent claw state is ", clawState.toString());
     }
 }
