@@ -169,3 +169,4 @@ logging/logging.*.*
 # Backups
 *.zip
 
+networktables.json
