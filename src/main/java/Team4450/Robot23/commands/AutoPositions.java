@@ -29,6 +29,8 @@ public class AutoPositions extends CommandBase {
         this.claw = claw;
 
         this.comboState = comboState;
+        this.armStates.get(comboStates.get(comboState).armState);
+        this.winchStates.get(comboStates.get(comboState).winchState); 
         if (comboState == ComboStateNames.OBJECT_PICKUP) this.clawState = ClawStateNames.FULLY_OPEN;
 
         addRequirements(this.arm);
@@ -118,7 +120,7 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
         // comboStates
-	comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
+	    comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
         comboStates.put(ComboStateNames.OBJECT_PICKUP, new ComboState(ArmStateNames.OBJECT_PICKUP, WinchStateNames.OBJECT_PICKUP));
         comboStates.put(ComboStateNames.LOWEST_SCORING, new ComboState(ArmStateNames.LOWEST_SCORING, WinchStateNames.LOWEST_SCORING));
         comboStates.put(ComboStateNames.MIDDLE_SCORING, new ComboState(ArmStateNames.MIDDLE_SCORING, WinchStateNames.MIDDLE_SCORING));
@@ -128,12 +130,12 @@ public class AutoPositions extends CommandBase {
 
         // Sets and adds the commands
         if (armState != null || (doingComboState && comboState != null)) {
-            armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboStates.get(comboState).armState) : armStates.get(armState), 0);
+            armCommand = new AutoArm(arm, armStates.get(armState), 0);
 	        commands.addCommands(armCommand);
 	    }
 
         if (winchState != null || (doingComboState && comboState != null)) {
-            winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboStates.get(comboState).winchState) : winchStates.get(winchState), 0);
+            winchCommand = new AutoWinch(winch, winchStates.get(winchState), 0);
 	        commands.addCommands(winchCommand);
 	    }
         
@@ -151,9 +153,9 @@ public class AutoPositions extends CommandBase {
         if (doingComboState && comboState != null)
             SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
         if ((doingComboState && comboState != null) || armState != null)
-            SmartDashboard.putString("Most recent arm state is ", (doingComboState) ? comboState.toString() : armState.toString());
+            SmartDashboard.putString("Most recent arm state is ", armState.toString());
         if ((doingComboState && comboState != null) || winchState != null)
-            SmartDashboard.putString("Most recent winch state is ", (doingComboState) ? comboState.toString() : winchState.toString());
+            SmartDashboard.putString("Most recent winch state is ", winchState.toString());
         if ((doingComboState && comboState != null) || clawState != null)
             SmartDashboard.putString("Most recent claw state is ", clawState.toString());
     }
