@@ -35,8 +35,8 @@ public class AutoPositions extends CommandBase {
         addRequirements(this.claw);
     }
 
-    public AutoPositions(Arm arm, Winch winch, Claw claw, 
-                ArmStateNames armState, WinchStateNames winchState, ClawStateNames clawState) {
+    public AutoPositions(Arm arm, Winch winch, Claw claw,
+            ArmStateNames armState, WinchStateNames winchState, ClawStateNames clawState) {
         doingComboState = false;
 
         this.arm = arm;
@@ -105,15 +105,17 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.HOLDING_CONE, 0.0);
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
+        
+
         commands = new ParallelCommandGroup();
 
         // Sets the commands
-        if (armState != null)
+        if (armState != null || comboState != null)
             armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
-        if (winchState != null)
+        if (winchState != null || comboState != null)
             winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
-        if (clawState != null && comboState == ComboStateNames.OBJECT_PICKUP)
-            clawCommand = new AutoClaw(claw, clawStates.get(ClawStateNames.FULLY_OPEN), 0);
+        if (clawState != null || (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP))
+            clawCommand = new AutoClaw(claw, (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP) ? clawStates.get(ClawStateNames.FULLY_OPEN) : clawStates.get(clawState), 0);
 
         // Adds the commands
         commands.addCommands(armCommand, winchCommand, clawCommand);
@@ -124,9 +126,13 @@ public class AutoPositions extends CommandBase {
     }
 
     private void updateDS() {
-        SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
-        SmartDashboard.putString("Most recent arm state is ", armState.toString());
-        SmartDashboard.putString("Most recent winch state is ", winchState.toString());
-        SmartDashboard.putString("Most recent claw state is ", clawState.toString());
+        if ((doingComboState && comboState != null))
+            SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
+        if ((doingComboState && comboState != null) || armState != null)
+            SmartDashboard.putString("Most recent arm state is ", (doingComboState) ? comboState.toString() : armState.toString());
+        if ((doingComboState && comboState != null) || winchState != null)
+            SmartDashboard.putString("Most recent winch state is ", (doingComboState) ? comboState.toString() : winchState.toString());
+        if ((doingComboState && comboState != null) || clawState != null)
+            SmartDashboard.putString("Most recent claw state is ", clawState.toString());
     }
 }
