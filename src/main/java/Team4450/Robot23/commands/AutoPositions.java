@@ -69,6 +69,16 @@ public class AutoPositions extends CommandBase {
         FULLY_OPEN, HOLDING_CUBE, HOLDING_CONE, CLOSED
     }
 
+    private static class ComboState {
+        public static final ArmStateNames armState;
+	public static final WinchStateNames winchState;
+
+	public ComboState(ArmStateNames armState, WinchStateNames winchState) {
+	    this.armState = armState;
+	    this.winchState = winchState;
+	}
+    }
+
     // Chosen state and debugging info
     private ComboStateNames comboState;
     private ArmStateNames armState;
@@ -80,6 +90,7 @@ public class AutoPositions extends CommandBase {
     private HashMap<ArmStateNames, Double> armStates = new HashMap<ArmStateNames, Double>();
     private HashMap<WinchStateNames, Double> winchStates = new HashMap<WinchStateNames, Double>();
     private HashMap<ClawStateNames, Double> clawStates = new HashMap<ClawStateNames, Double>();
+    private HashMap<ComboStateNames, ComboState> comboStates = new HashMap<ComboStateNames, ComboState>();
 
     public void initialize() {
         // Creating inital states, where the doubles are target revolutions
@@ -105,25 +116,31 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.HOLDING_CONE, 0.0);
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
-        
+	// comboStates
+        comboStates.put(ComboStateNames.WHATEVER, new ComboState(ArmStateNames.PLACEHOLDER_ARM_STATE, WinchStateNames.PLACEHOLDER_WINCH_STATE));
 
         commands = new ParallelCommandGroup();
 
-        // Sets the commands
-        if (armState != null || comboState != null)
-            armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboState) : armStates.get(armState), 0);
-        if (winchState != null || comboState != null)
-            winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboState) : winchStates.get(winchState), 0);
-        if (clawState != null || (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP))
+        // Sets and adds the commands
+        if (armState != null || comboState != null) {
+            armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboStates.get(comboState).armState) : armStates.get(armState), 0);
+	    commands.addCommands(armCommand);
+	}
+        if (winchState != null || comboState != null) {
+            winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboStates.get(comboState).winchState) : winchStates.get(winchState), 0);
+	    commands.addCommand(winchCommand);
+	}
+        if (clawState != null || (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP)) {
             clawCommand = new AutoClaw(claw, (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP) ? clawStates.get(ClawStateNames.FULLY_OPEN) : clawStates.get(clawState), 0);
-
-        // Adds the commands
-        commands.addCommands(armCommand, winchCommand, clawCommand);
+            commands.addCommand(clawCommand);
+	}
 
         commands.schedule();
 
         updateDS();
     }
+
+    private 
 
     private void updateDS() {
         if ((doingComboState && comboState != null))
