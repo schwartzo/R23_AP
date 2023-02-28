@@ -70,13 +70,13 @@ public class AutoPositions extends CommandBase {
     }
 
     private static class ComboState {
-        public static final ArmStateNames armState;
-	public static final WinchStateNames winchState;
+        public final ArmStateNames armState;
+	    public final WinchStateNames winchState;
 
-	public ComboState(ArmStateNames armState, WinchStateNames winchState) {
-	    this.armState = armState;
-	    this.winchState = winchState;
-	}
+        public ComboState(ArmStateNames armState, WinchStateNames winchState) {
+            this.armState = armState;
+            this.winchState = winchState;
+        }
     }
 
     // Chosen state and debugging info
@@ -116,31 +116,31 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.HOLDING_CONE, 0.0);
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
-	// comboStates
-        comboStates.put(ComboStateNames.WHATEVER, new ComboState(ArmStateNames.PLACEHOLDER_ARM_STATE, WinchStateNames.PLACEHOLDER_WINCH_STATE));
+	    // comboStates
+        comboStates.put(ComboStateNames.OBJECT_PICKUP, new ComboState(ArmStateNames.OBJECT_PICKUP, WinchStateNames.OBJECT_PICKUP));
 
         commands = new ParallelCommandGroup();
 
         // Sets and adds the commands
         if (armState != null || comboState != null) {
             armCommand = new AutoArm(arm, (doingComboState) ? armStates.get(comboStates.get(comboState).armState) : armStates.get(armState), 0);
-	    commands.addCommands(armCommand);
-	}
+	        commands.addCommands(armCommand);
+	    }
+
         if (winchState != null || comboState != null) {
             winchCommand = new AutoWinch(winch, (doingComboState) ? winchStates.get(comboStates.get(comboState).winchState) : winchStates.get(winchState), 0);
-	    commands.addCommand(winchCommand);
-	}
+	        commands.addCommands(winchCommand);
+	    }
+        
         if (clawState != null || (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP)) {
             clawCommand = new AutoClaw(claw, (doingComboState && comboState == ComboStateNames.OBJECT_PICKUP) ? clawStates.get(ClawStateNames.FULLY_OPEN) : clawStates.get(clawState), 0);
-            commands.addCommand(clawCommand);
-	}
+            commands.addCommands(clawCommand);
+	    }
 
         commands.schedule();
 
         updateDS();
     }
-
-    private 
 
     private void updateDS() {
         if ((doingComboState && comboState != null))

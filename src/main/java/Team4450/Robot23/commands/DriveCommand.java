@@ -99,11 +99,7 @@ public class DriveCommand extends CommandBase
             strafe = Util.clampValue(strafe, .30);
             rotation = Util.clampValue(rotation, .30);
         }
-<<<<<<< HEAD
-
-=======
         
->>>>>>> upstream/master
         driveBase.drive(throttle, strafe, rotation);
     }
 
