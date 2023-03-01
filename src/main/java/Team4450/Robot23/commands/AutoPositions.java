@@ -73,7 +73,7 @@ public class AutoPositions extends CommandBase {
     }
 
     public enum ClawStateNames {
-        FULLY_OPEN, HOLDING_CUBE, HOLDING_CONE, CLOSED
+        FULLY_OPEN, HOLDING_CUBE, HOLDING_CONE
     }
 
     private static class ComboState {
@@ -105,12 +105,12 @@ public class AutoPositions extends CommandBase {
         // Sets and adds the commands
         if (armState != null) {
             armCommand = new AutoArm(arm, armStates.get(armState), 0);
-                commands.addCommands(armCommand);
+            commands.addCommands(armCommand);
         }
 
         if (winchState != null) {
             winchCommand = new AutoWinch(winch, winchStates.get(winchState), 0);
-                commands.addCommands(winchCommand);
+            commands.addCommands(winchCommand);
         }
         
         if (clawState != null) {
@@ -156,7 +156,6 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.FULLY_OPEN, 0.0);
         clawStates.put(ClawStateNames.HOLDING_CUBE, 0.0);
         clawStates.put(ClawStateNames.HOLDING_CONE, 0.0);
-        clawStates.put(ClawStateNames.CLOSED, 0.0);
 
         // comboStates
         comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
