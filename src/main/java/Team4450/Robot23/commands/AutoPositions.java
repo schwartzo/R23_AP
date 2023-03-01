@@ -22,6 +22,8 @@ public class AutoPositions extends CommandBase {
     private Command clawCommand;
 
     public AutoPositions(Arm arm, Winch winch, Claw claw, ComboStateNames comboState) {
+        initMaps();
+
         doingComboState = true;
 
         this.arm = arm;
@@ -40,6 +42,8 @@ public class AutoPositions extends CommandBase {
 
     public AutoPositions(Arm arm, Winch winch, Claw claw,
             ArmStateNames armState, WinchStateNames winchState, ClawStateNames clawState) {
+        initMaps();
+
         doingComboState = false;
 
         this.arm = arm;
@@ -74,7 +78,7 @@ public class AutoPositions extends CommandBase {
 
     private static class ComboState {
         public final ArmStateNames armState;
-	    public final WinchStateNames winchState;
+        public final WinchStateNames winchState;
 
         public ComboState(ArmStateNames armState, WinchStateNames winchState) {
             this.armState = armState;
@@ -95,7 +99,42 @@ public class AutoPositions extends CommandBase {
     private HashMap<ClawStateNames, Double> clawStates = new HashMap<ClawStateNames, Double>();
     private HashMap<ComboStateNames, ComboState> comboStates = new HashMap<ComboStateNames, ComboState>();
 
-    public void initialize() {
+    public void initialize() { 
+        commands = new ParallelCommandGroup();
+
+        // Sets and adds the commands
+        if (armState != null) {
+            armCommand = new AutoArm(arm, armStates.get(armState), 0);
+                commands.addCommands(armCommand);
+        }
+
+        if (winchState != null) {
+            winchCommand = new AutoWinch(winch, winchStates.get(winchState), 0);
+                commands.addCommands(winchCommand);
+        }
+        
+        if (clawState != null) {
+            clawCommand = new AutoClaw(claw, clawStates.get(clawState), 0);
+            commands.addCommands(clawCommand);
+        }
+
+        commands.schedule();
+
+        updateDS();
+    }
+
+    private void updateDS() {
+        if (doingComboState && comboState != null)
+            SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
+        if (armState != null)
+            SmartDashboard.putString("Most recent arm state is ", armState.toString());
+        if (winchState != null)
+            SmartDashboard.putString("Most recent winch state is ", winchState.toString());
+        if (clawState != null)
+            SmartDashboard.putString("Most recent claw state is ", clawState.toString());
+    }
+
+    private void initMaps() {
         // Creating inital states, where the doubles are target revolutions
         // armStates
         armStates.put(ArmStateNames.FULLY_CONTAINED, 0.0); // ALL DOUBLES ARE PLACEHOLDER VALUES
@@ -120,43 +159,10 @@ public class AutoPositions extends CommandBase {
         clawStates.put(ClawStateNames.CLOSED, 0.0);
 
         // comboStates
-	    comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
+        comboStates.put(ComboStateNames.FULLY_CONTAINED, new ComboState(ArmStateNames.FULLY_CONTAINED, WinchStateNames.FULLY_CONTAINED));
         comboStates.put(ComboStateNames.OBJECT_PICKUP, new ComboState(ArmStateNames.OBJECT_PICKUP, WinchStateNames.OBJECT_PICKUP));
         comboStates.put(ComboStateNames.LOWEST_SCORING, new ComboState(ArmStateNames.LOWEST_SCORING, WinchStateNames.LOWEST_SCORING));
         comboStates.put(ComboStateNames.MIDDLE_SCORING, new ComboState(ArmStateNames.MIDDLE_SCORING, WinchStateNames.MIDDLE_SCORING));
         comboStates.put(ComboStateNames.HIGHEST_SCORING, new ComboState(ArmStateNames.HIGHEST_SCORING, WinchStateNames.HIGHEST_SCORING));
-
-        commands = new ParallelCommandGroup();
-
-        // Sets and adds the commands
-        if (armState != null) {
-            armCommand = new AutoArm(arm, armStates.get(armState), 0);
-	        commands.addCommands(armCommand);
-	    }
-
-        if (winchState != null) {
-            winchCommand = new AutoWinch(winch, winchStates.get(winchState), 0);
-	        commands.addCommands(winchCommand);
-	    }
-        
-        if (clawState != null) {
-            clawCommand = new AutoClaw(claw, clawStates.get(clawState), 0);
-            commands.addCommands(clawCommand);
-	    }
-
-        commands.schedule();
-
-        updateDS();
-    }
-
-    private void updateDS() {
-        if (doingComboState && comboState != null)
-            SmartDashboard.putString("Most recent arm/winch combo state is ", comboState.toString());
-        if (armState != null)
-            SmartDashboard.putString("Most recent arm state is ", armState.toString());
-        if (winchState != null)
-            SmartDashboard.putString("Most recent winch state is ", winchState.toString());
-        if (clawState != null)
-            SmartDashboard.putString("Most recent claw state is ", clawState.toString());
     }
 }
