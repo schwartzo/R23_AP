@@ -3,13 +3,16 @@ package Team4450.Robot23.commands;
 import Team4450.Lib.Util;
 import Team4450.Robot23.subsystems.Winch;
 import static Team4450.Robot23.Constants.*;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class WinchCommand extends CommandBase {
     private final Winch winch;
-    private final double winchPower;
+    private final DoubleSupplier winchPower;
     
-    public WinchCommand(Winch winch, double winchPower) {
+    public WinchCommand(Winch winch, DoubleSupplier winchPower) {
         Util.consoleLog();
 
         this.winch = winch;
@@ -28,8 +31,8 @@ public class WinchCommand extends CommandBase {
         Util.consoleLog("Interrupted status is ", interrupted);
     }
 
-    private void setWinchPower(double inputPower) {
-        winch.setPower(deadband(inputPower, THROTTLE_DEADBAND));
+    private void setWinchPower(DoubleSupplier inputPower) {
+        winch.setPower(deadband(inputPower.getAsDouble(), THROTTLE_DEADBAND));
     }
 
     private static double deadband(double value, double deadband) {

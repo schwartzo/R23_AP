@@ -3,13 +3,16 @@ package Team4450.Robot23.commands;
 import Team4450.Lib.Util;
 import Team4450.Robot23.subsystems.Arm;
 import static Team4450.Robot23.Constants.*;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmCommand extends CommandBase {
     private final Arm arm;
-    private final double armPower;
+    private final DoubleSupplier armPower;
     
-    public ArmCommand(Arm arm, double armPower) {
+    public ArmCommand(Arm arm, DoubleSupplier armPower) {
         Util.consoleLog();
 
         this.arm = arm;
@@ -28,8 +31,8 @@ public class ArmCommand extends CommandBase {
         Util.consoleLog("Interrupted status is ", interrupted);
     }
 
-    private void setArmPower(double inputPower) {
-        arm.setPower(deadband(inputPower, THROTTLE_DEADBAND));
+    private void setArmPower(DoubleSupplier inputPower) {
+        arm.setPower(deadband(inputPower.getAsDouble(), THROTTLE_DEADBAND));
     }
 
     private static double deadband(double value, double deadband) {
