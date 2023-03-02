@@ -1,5 +1,6 @@
 package Team4450.Robot23.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Team4450.Robot23.commands.autonomous.AutoDriveTrajectory;
@@ -17,7 +18,7 @@ public class CommandMerger extends CommandBase {
 
     Trajectory trajectory;
     List<State> trajectoryList;
-    List<State> partialTrajList;
+    List<State> partialTrajList = new ArrayList<State>();
     commandWithIndex[] commandsWithIndex;
 
     public static class commandWithIndex {
@@ -46,6 +47,8 @@ public class CommandMerger extends CommandBase {
     }
 
     public void initialize() {
+        seqCommandGroup = new SequentialCommandGroup();
+
         if (trajectoryList.size() == 0 || commandsWithIndex.length == 0) {
             // The point of this currently is to merge commands into a trajectory. If either
             // has nothing inside of it, it is useless.
@@ -54,7 +57,7 @@ public class CommandMerger extends CommandBase {
 
         while (!finishedSetup) {
             previousTargetIndex = targetIndex;
-            targetIndex = commandsWithIndex[commandsCompleted + 1].commandIndex;
+            targetIndex = commandsWithIndex[commandsCompleted].commandIndex;
 
             // Adds all the commands in order according to the index
             // All the commands (which have priority at the same value compared to
@@ -79,29 +82,29 @@ public class CommandMerger extends CommandBase {
 
             seqCommandGroup.addCommands(new AutoDriveTrajectory(driveBase, new Trajectory(partialTrajList), StopMotors.stop, Brakes.on));
 
-            if (commandsCompleted == commandsWithIndex.length && trajStatesCompelted == trajectoryList.size()) continue;
+            if (commandsCompleted == commandsWithIndex.length && trajStatesCompelted == trajectoryList.size()) break;
 
             else if (commandsCompleted == commandsWithIndex.length) {
                 partialTrajList.clear();
                 for (int i = previousTargetIndex - 1; i < trajectoryList.size() - 1; i++) {
-                    partialTrajList.add(trajectoryList.get(i));
+                    partialTrajList.add(trajectoryList.get((i <= 0) ? 0 : i)); // To prevent it from trying to call -1
                 }
 
                 seqCommandGroup.addCommands(new AutoDriveTrajectory(driveBase, new Trajectory(partialTrajList), StopMotors.stop, Brakes.on));
 
-                continue;
+                break;
             }
 
             else if (trajStatesCompelted == trajectoryList.size()) {
                 for (int i = targetIndex + 1; i < commandsWithIndex.length - 1; i++) {
                     seqCommandGroup.addCommands(commandsWithIndex[i].command);
-
-                    continue;
                 }
+
+                break;
             }
         }
 
-        // seqCommandGroup.schedule();
+        seqCommandGroup.schedule();
     }
 }
 /*
