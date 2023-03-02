@@ -24,6 +24,7 @@ import Team4450.Robot23.commands.autonomous.DoubleConeAuto;
 import Team4450.Robot23.commands.autonomous.TestAuto1;
 import Team4450.Robot23.commands.autonomous.TestAuto3;
 import Team4450.Robot23.commands.autonomous.TestAuto4;
+import Team4450.Robot23.commands.autonomous.TestingAuto;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -118,7 +119,8 @@ public class RobotContainer
 		TestAuto3,
 		TestAuto4,
 		ChargeStationAuto,
-		DoubleConeAuto
+		DoubleConeAuto,
+		TestingAuto
 	}
 
 	public static Pose2d	defaultStartingPose;
@@ -404,6 +406,10 @@ public class RobotContainer
 			case DoubleConeAuto:
 				autoCommand = new DoubleConeAuto(driveBase, arm, winch, claw);
 				break;
+
+			case TestingAuto:
+				autoCommand = new TestingAuto(driveBase, startingPose);
+				break;
 		}
         
 		return autoCommand;
@@ -425,6 +431,7 @@ public class RobotContainer
 		autoChooser.addOption("Test Auto 4", AutoProgram.TestAuto4);
 		autoChooser.addOption("ChargeStationAuto", AutoProgram.ChargeStationAuto);
 		autoChooser.addOption("DoubleConeAuto", AutoProgram.DoubleConeAuto);
+		autoChooser.addOption("Testing Auto", AutoProgram.TestingAuto);
 				
 		SmartDashboard.putData(autoChooser);
 	}

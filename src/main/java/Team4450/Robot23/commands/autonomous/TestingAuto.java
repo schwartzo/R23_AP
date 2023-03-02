@@ -1,0 +1,153 @@
+package Team4450.Robot23.commands.autonomous;
+
+import Team4450.Lib.LCD;
+import Team4450.Lib.Util;
+import Team4450.Robot23.RobotContainer;
+import Team4450.Robot23.commands.CommandMerger;
+import Team4450.Robot23.commands.CommandMerger.commandWithIndex;
+import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
+import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.StopMotors;
+import Team4450.Robot23.subsystems.DriveBase;
+
+import static Team4450.Robot23.Constants.*;
+
+import java.util.List;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+/**
+ * This is an example autonomous command based on 4450 customized version of
+ * Wpilib Trajetory following commands.
+ */
+public class TestingAuto extends CommandBase
+{
+	private final DriveBase driveBase;
+	
+	private SequentialCommandGroup	commands = null;
+    private Command					command = null;
+	private	Pose2d					startingPose;   
+
+	/**
+	 * Creates a new TestAuto3 autonomous command. This command demonstrates one
+	 * possible structure for an autonomous command and shows the use of the 
+	 * autonomous driving support commands.
+	 *
+	 * @param driveBase DriveBase subsystem used by this command to drive the robot.
+	 * @param startingPose Starting pose of the robot.
+	 */
+	public TestingAuto(DriveBase driveBase, Pose2d startingPose) 
+	{
+		Util.consoleLog();
+		
+		this.driveBase = driveBase;
+
+		this.startingPose = startingPose;
+
+		// Use addRequirements() here to declare subsystem dependencies.
+		addRequirements(this.driveBase);
+	}
+	
+	/**
+	 * Called when the command is initially scheduled. (non-Javadoc)
+	 * @see edu.wpi.first.wpilibj2.command.Command#initialize()
+	 */
+	@Override
+	public void initialize() 
+	{
+		Util.consoleLog();
+
+		SmartDashboard.putBoolean("Autonomous Active", true);
+		
+	  	LCD.printLine(LCD_1, "Mode: Auto - TestingAuto - All=%s, Location=%d, FMS=%b, msg=%s", alliance.name(), location, 
+				DriverStation.isFMSAttached(), gameMessage);
+		
+		// Reset drive base distance tracking.	  	
+	  	driveBase.resetDistanceTraveled();
+	  	
+	  	// Set drive base yaw tracking to 0.
+	  	driveBase.resetYaw();
+
+		// Set heading to initial angle (0 is robot pointed down the field) so
+		// NavX class can track which way the robot is pointed all during the match.
+		RobotContainer.navx.setHeading(startingPose.getRotation().getDegrees());
+			
+		// Target heading should be the same.
+		RobotContainer.navx.setTargetHeading(startingPose.getRotation().getDegrees());
+		
+		// Since a typical autonomous program consists of multiple actions, which are commands
+		// in this style of programming, we will create a list of commands for the actions to
+		// be taken in this auto program and add them to a sequential command list to be 
+		// executed one after the other until done.
+		
+		commands = new SequentialCommandGroup();
+		
+        Translation2d currentPos = new Translation2d();
+        TrajectoryConfig config = AutoDriveTrajectory.getTrajectoryConfig();
+
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                                        startingPose,
+                                        List.of(
+                                            currentPos = new Translation2d(startingPose.getX() + 2, startingPose.getY()),
+                                            currentPos = new Translation2d(currentPos.getX(), currentPos.getY() - 2)
+                                        ),
+                                        new Pose2d(currentPos.getX(), currentPos.getY(), startingPose.getRotation()),
+                                        config);
+
+        new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2));
+		
+		commands.addCommands(command);
+		
+		commands.schedule();
+	}
+	
+	/**
+	 *  Called every time the scheduler runs while the command is scheduled.
+	 *  In this model, this command just idles while the Command Group we
+	 *  created runs on its own executing the steps (commands) of this Auto
+	 *  program.
+	 */
+	@Override
+	public void execute() 
+	{
+	}
+	
+	/**
+	 *  Called when the command ends or is interrupted.
+	 */
+	@Override
+	public void end(boolean interrupted) 
+	{
+		Util.consoleLog("interrupted=%b", interrupted);
+		
+		driveBase.stop();
+		
+		Util.consoleLog("final heading=%.2f  Radians=%.2f", RobotContainer.navx.getHeading(), RobotContainer.navx.getHeadingR());
+		Util.consoleLog("end -----------------------------------------------------");
+
+		SmartDashboard.putBoolean("Autonomous Active", false);
+	}
+	
+	/**
+	 *  Returns true when this command should end. That should be when
+	 *  all the commands in the command list have finished.
+	 */
+	@Override
+	public boolean isFinished() 
+	{
+		// Note: commands.isFinished() will not work to detect the end of the command list
+		// due to how FIRST coded the SquentialCommandGroup class. 
+		
+		return !commands.isScheduled();
+    }
+
+}

@@ -24,7 +24,7 @@ public class CommandMerger extends CommandBase {
         Command command;
         int commandIndex;
 
-        commandWithIndex(Command command, int commandIndex) {
+        public commandWithIndex(Command command, int commandIndex) {
             this.command = command;
             this.commandIndex = commandIndex;
         }
