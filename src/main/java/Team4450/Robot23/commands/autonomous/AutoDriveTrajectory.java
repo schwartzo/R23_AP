@@ -46,7 +46,7 @@ public class AutoDriveTrajectory extends SwerveControllerCommand
      * @param stop          Set stop or not at trajectory end.
      * @param brakes        If stopping, set if brakes on or off.
      */
-    AutoDriveTrajectory(DriveBase driveBase, Trajectory trajectory, StopMotors stop, Brakes brakes)
+    public AutoDriveTrajectory(DriveBase driveBase, Trajectory trajectory, StopMotors stop, Brakes brakes)
     {
         super(trajectory,
             driveBase::getRobotPose, 

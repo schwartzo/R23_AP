@@ -4,6 +4,7 @@ import static Team4450.Robot23.Constants.*;
 
 import Team4450.Robot23.commands.AutoBalance;
 import Team4450.Robot23.commands.AutoPositions;
+import Team4450.Robot23.commands.CommandMerger;
 import Team4450.Robot23.commands.AutoPositions.ClawStateNames;
 import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
 import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
