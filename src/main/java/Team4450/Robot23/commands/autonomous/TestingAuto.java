@@ -91,14 +91,14 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 		
-        Translation2d currentPos = new Translation2d();
+        Translation2d currentPose = new Translation2d();
         TrajectoryConfig config = AutoDriveTrajectory.getTrajectoryConfig();
 
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                                        startingPose,
+                                        startingPose = new Pose2d(startingPose.getX() + 2, startingPose.getY(), startingPose.getRotation()),
                                         List.of(
-                                            currentPos = new Translation2d(startingPose.getX() + 2, startingPose.getY()),
-                                            currentPos = new Translation2d(currentPos.getX(), currentPos.getY() - 2)
+                                            currentPose = new Translation2d(startingPose.getX() + 2, startingPose.getY()),
+                                            currentPose = new Translation2d(currentPose.getX(), currentPose.getY() - 2)
                                         ),
                                         new Pose2d(startingPose.getX(), startingPose.getY(), startingPose.getRotation()),
                                         config);

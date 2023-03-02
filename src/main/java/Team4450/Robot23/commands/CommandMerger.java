@@ -7,6 +7,7 @@ import Team4450.Robot23.commands.autonomous.AutoDriveTrajectory;
 import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
 import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.StopMotors;
 import Team4450.Robot23.subsystems.DriveBase;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +18,7 @@ public class CommandMerger extends CommandBase {
     DriveBase driveBase;
 
     Trajectory trajectory;
+    Pose2d currentPose;
     List<State> trajectoryList;
     List<State> partialTrajList = new ArrayList<State>();
     commandWithIndex[] commandsWithIndex;
