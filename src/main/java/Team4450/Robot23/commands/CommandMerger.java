@@ -72,8 +72,9 @@ public class CommandMerger extends CommandBase {
 
             partialTrajList.clear();
             for (int i = previousTargetIndex - 1; i < targetIndex; i++) {
-                partialTrajList.add(trajectoryList.get(i));
+                partialTrajList.add(trajectoryList.get((i <= 0) ? 0 : i)); // To prevent it from trying to call -1
             }
+
             trajStatesCompelted += targetIndex - previousTargetIndex;
 
             seqCommandGroup.addCommands(new AutoDriveTrajectory(driveBase, new Trajectory(partialTrajList), StopMotors.stop, Brakes.on));
