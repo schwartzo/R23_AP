@@ -101,7 +101,7 @@ public class CommandMerger extends CommandBase {
             }
         }
 
-        seqCommandGroup.schedule();
+        // seqCommandGroup.schedule();
     }
 }
 /*

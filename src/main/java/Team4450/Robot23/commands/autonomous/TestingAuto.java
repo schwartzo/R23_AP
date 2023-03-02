@@ -97,13 +97,12 @@ public class TestingAuto extends CommandBase
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
                                         startingPose,
                                         List.of(
-                                            currentPos = new Translation2d(startingPose.getX() + 2, startingPose.getY()),
-                                            currentPos = new Translation2d(currentPos.getX(), currentPos.getY() - 2)
+                                            currentPos = new Translation2d(startingPose.getX() + 2, startingPose.getY())
                                         ),
-                                        new Pose2d(currentPos.getX(), currentPos.getY(), startingPose.getRotation()),
+                                        new Pose2d(currentPos.getX(), currentPos.getY() - 2, startingPose.getRotation()),
                                         config);
 
-        new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2));
+        command = new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 1));
 		
 		commands.addCommands(command);
 		
