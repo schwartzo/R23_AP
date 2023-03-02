@@ -116,7 +116,7 @@ public class RobotContainer
 
 	// Classes to access drop down lists on Driver Station.
 	private static SendableChooser<AutoProgram>	autoChooser;
-	private static SendableChooser<Pose2d>		startingPoseChooser;
+	private static SendableChooser<Integer>		startingPoseChooser;
 
 	/**
 	 * The container for the robot. Contains subsystems, Opertor Interface devices, and commands.
@@ -355,6 +355,7 @@ public class RobotContainer
 	{
 		AutoProgram		program = AutoProgram.NoProgram;
 		Pose2d			startingPose = DEFAULT_STARTING_POSE;
+		Integer			startingPoseIndex = 0;
 		Command			autoCommand = null;
 		
 		Util.consoleLog();
@@ -363,7 +364,14 @@ public class RobotContainer
 		{
 			program = autoChooser.getSelected();
 
-			startingPose = startingPoseChooser.getSelected();
+			startingPoseIndex = startingPoseChooser.getSelected();
+
+			startingPose = STARTING_POSES[startingPoseIndex];
+
+			// Adjust Y position for Red side of the field. Hopefully this works.
+			
+			if (alliance == Alliance.Red) startingPose = new Pose2d(startingPose.getX(), 8.014 - startingPose.getY(), 
+																	startingPose.getRotation());
 		}
 		catch (Exception e)	{ Util.logException(e); }
 		
@@ -413,12 +421,13 @@ public class RobotContainer
 	private void setStartingPoses()
 	{
 		Util.consoleLog();
-		
-		startingPoseChooser = new SendableChooser<Pose2d>();
+
+		startingPoseChooser = new SendableChooser<Integer>();
 		
 		SendableRegistry.add(startingPoseChooser, "Start Position");
-		startingPoseChooser.setDefaultOption("Default", DEFAULT_STARTING_POSE);
-		//startingPoseChooser.addOption("Blue 1", BLUE_1);		
+		startingPoseChooser.setDefaultOption("None", 0);
+
+		for (Integer i = 1; i < 10; i++) startingPoseChooser.addOption(i.toString(), i);			
 				
 		SmartDashboard.putData(startingPoseChooser);
 	}

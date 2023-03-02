@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class Constants
 {
-	public static String		PROGRAM_NAME = "ORF23-02.25.23-1";
+	public static String		PROGRAM_NAME = "ORF23-03.01.23-1";
 
 	public static Robot			robot;
 
@@ -50,9 +50,10 @@ public final class Constants
 	//public static final int		COMPRESSOR = 0;
 
 	// Digital Input port assignments. Encoder takes 2 ports.
-    public static final int     WINCH_SWITCH = 0;
-    public static final int     ARM_SWITCH = 1;
-    public static final int     CLAW_SWITCH = 2;     
+    public static final int     WINCH_SWITCH_LOWER = 0;
+    public static final int     WINCH_SWITCH_UPPER = 1;
+    public static final int     ARM_SWITCH = 2;
+    public static final int     CLAW_SWITCH = 3;     
 	  
 	// Analog Input port assignments.
 	
@@ -70,7 +71,21 @@ public final class Constants
 
 	// Default starting field position in meters for pose tracking.
 	public static final Pose2d	DEFAULT_STARTING_POSE = new Pose2d(2.610, 2.847, Rotation2d.fromDegrees(0));
-    
+
+    public static Pose2d[]      STARTING_POSES = new Pose2d[]
+    {
+        new Pose2d(2.553, 4.915, Rotation2d.fromDegrees(0)), // First pose is the default if driver selects no
+        new Pose2d(2.553, 4.915, Rotation2d.fromDegrees(0)), // starting pose. Then positions 1-9.
+        new Pose2d(2.553, 4.360, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 3.836, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 3.361, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 2.838, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 2.340, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 1.805, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 1.265, Rotation2d.fromDegrees(0)),
+        new Pose2d(2.553, 0.713, Rotation2d.fromDegrees(0))
+    };
+        
 	// Next group of constants are for Swerve drive.
 
     // The maximum voltage that will be delivered to the drive motors. This can be reduced to cap the 
