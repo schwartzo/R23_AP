@@ -34,7 +34,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand
      *
      * @param drive         The drive subsystem to use.
      * @param distanceX     The distance to drive in meters along the X axis. + is forward.
-     * @param distanceY     The distance to drive in meters along the Y axis. + is .
+     * @param distanceY     The distance to drive in meters along the Y axis. + is left.
      * @param stop          Set to stop or not stop motors at end.
      * @param brakes        If stopping, set brakes on or off.
      */
