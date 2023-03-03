@@ -3,8 +3,12 @@ package Team4450.Robot23.commands.autonomous;
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
-import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
-import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.StopMotors;
+import Team4450.Robot23.commands.CommandSimplifier;
+import Team4450.Robot23.commands.CommandSimplifier.CommandType;
+import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.Brakes;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.StopMotors;
 import Team4450.Robot23.subsystems.DriveBase;
 
 import static Team4450.Robot23.Constants.*;
@@ -88,8 +92,20 @@ public class TestingAuto extends CommandBase
 		// executed one after the other until done.
 		
 		commands = new SequentialCommandGroup();
-		
-        commands.schedule();
+
+		// command = new CommandSimplifier(driveBase, null, null, null, new CommandType[] {
+		// 	new CommandType(new Translation2d(0, 2)),
+		// 	new CommandType(new Translation2d(-2, 0)),
+		// 	new CommandType(new Translation2d(2, -2))
+		// });
+
+		// commands.addCommands(command);
+
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 2, 0, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 2, 2, StopMotors.stop, Brakes.on));
+
+		commands.schedule();
 	}
 	
 	/**
@@ -101,6 +117,7 @@ public class TestingAuto extends CommandBase
 	@Override
 	public void execute() 
 	{
+		System.out.println("Robot is currently at " + driveBase.getRobotPose());
 	}
 	
 	/**

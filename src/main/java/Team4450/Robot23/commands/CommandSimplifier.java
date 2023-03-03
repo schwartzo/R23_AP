@@ -1,7 +1,9 @@
 package Team4450.Robot23.commands;
 
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
-import Team4450.Robot23.commands.autonomous.AutoStrafeProfiled;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.Brakes;
+import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.StopMotors;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -37,9 +39,9 @@ public class CommandSimplifier extends CommandBase {
         commandType type;
 
         Translation2d coordinates;
-        public CommandType(Translation2d coordinates, commandType type) {
+        public CommandType(Translation2d coordinates) {
             this.coordinates = coordinates;
-            this.type = type;
+            this.type = commandType.AutoSwerve;
         }
     }
 
@@ -47,7 +49,11 @@ public class CommandSimplifier extends CommandBase {
         seqCmndGroup = new SequentialCommandGroup();
 
         for (int i = 0; i < commandTypes.length - 1; i++) {
-            if (commandTypes[i].type == commandType.AutoSwerve); // seqCmndGroup.addCommands(new AutoSwerve(driveBase, commandType[i].coordinates.getX(), commandType[i].coordinates.getY(), StopMotors.stop, Brakes.on));
+            System.out.println("Command type at index " + (i + 1) + " was " + commandTypes[i].type.toString());
+
+            if (commandTypes[i].type == commandType.AutoSwerve); 
+                System.out.println("Moving by (" + commandTypes[i].coordinates.getX() + ", " + commandTypes[i].coordinates.getY() + ")");
+                seqCmndGroup.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, commandTypes[i].coordinates.getX(), commandTypes[i].coordinates.getY(), StopMotors.stop, Brakes.on));
         }
 
         seqCmndGroup.schedule();
