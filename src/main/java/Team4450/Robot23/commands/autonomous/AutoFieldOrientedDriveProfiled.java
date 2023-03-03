@@ -11,8 +11,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
-// import java.util.Math;
-
 /**
  * A command that will drive the robot in any direction to the specified
  * distances using
@@ -52,7 +50,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
                 // execute() call.
                 driveBase::getDistanceTraveled,
                 // Set target distance.
-                Math.hypot(distanceX, distanceY),
+                Math.hypot(Math.abs(distanceX), Math.abs(distanceY)),
                 // Pipe output to drive robot.
                 (output, setpoint) -> driveBase.drive(output * getOutputMultiplierX(distanceX, distanceY), 
                                                       output * getOutputMultiplierY(distanceX, distanceY), 
@@ -72,7 +70,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
         this.stop = stop;
         this.distanceX = distanceX;
         this.distanceY = distanceY;
-        this.distance = Math.hypot(distanceX, distanceY);
+        this.distance = Math.hypot(Math.abs(distanceX), Math.abs(distanceY));
 
         getController().setTolerance(kToleranceMeters);
     }
@@ -91,7 +89,6 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
 
         driveBase.resetDistanceTraveled();
 
-        // driveBase.toggleFieldRelative();
         driveBase.toggleFieldOriented();
 
         driveBase.resetYaw();
