@@ -54,7 +54,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand
             // interrupt the calling auto command.
             //);
 
-        Util.consoleLog("distanceX=%.3fm distanceY=%.3fm distance = %.3fm stop=%s  brakes=%s", distanceX, distanceY, distance, stop, brakes);
+        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s", distanceX, distanceY, distance, stop, brakes);
             
         Util.consoleLog("kP=%.6f  kI=%.6f", kP, kI);
 
@@ -71,7 +71,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand
     @Override
     public void initialize()
     {
-        Util.consoleLog("distanceX=%.3f distanceY=%.3f distance=%.3fm  stop=%s  brakes=%s", distanceX, distanceY, distance, stop, brakes);
+        Util.consoleLog("distanceX=%.3f  distanceY=%.3f  distance=%.3fm  stop=%s  brakes=%s", distanceX, distanceY, distance, stop, brakes);
 
         startTime = Util.timeStamp();
 
