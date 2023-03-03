@@ -103,10 +103,10 @@ public class TestingAuto extends CommandBase
                                         new Pose2d(currentPose.getX() - 2, currentPose.getY() - 2, startingPose.getRotation()),
                                         config);
 
-        command = new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex[] { 
-                new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 1), 
-                new commandWithIndex(new AutoStrafeProfiled(driveBase, -2, StopMotors.stop, Brakes.on), 2),
-                new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2)});
+        // command = new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex[] { 
+        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 1), 
+        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, -2, StopMotors.stop, Brakes.on), 2),
+        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2)});
 		
 		commands.addCommands(command);
 		
