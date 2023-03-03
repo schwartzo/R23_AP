@@ -36,7 +36,7 @@ public class CommandMerger extends CommandBase {
 
     SequentialCommandGroup seqCommandGroup;
 
-    public CommandMerger(DriveBase driveBase, Translation2d[] movementArray, commandWithIndex... commandsWithIndex) {
+    public CommandMerger(DriveBase driveBase, Translation2d[] movementArray, commandWithIndex[] commandsWithIndex) {
         this.driveBase = driveBase;
         this.movementArray = movementArray;
         this.commandsWithIndex = commandsWithIndex;
@@ -47,7 +47,7 @@ public class CommandMerger extends CommandBase {
 
         for (int moveIndex = 0; moveIndex < movementArray.length; moveIndex++) {
             for (int commandIndex = moveIndex; commandIndex < commandsWithIndex.length; commandIndex++) {
-                if (moveIndex == commandsWithIndex[commandIndex].commandIndex) {
+                if (moveIndex <= commandsWithIndex[commandIndex].commandIndex) {
                     fullCommandList.add(commandsWithIndex[commandIndex].command);
                 }
             }

@@ -91,22 +91,13 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 		
-        Translation2d currentPose = new Translation2d();
-        TrajectoryConfig config = AutoDriveTrajectory.getTrajectoryConfig();
-
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                                        startingPose = new Pose2d(startingPose.getX(), startingPose.getY(), startingPose.getRotation()),
-                                        List.of(
-                                            currentPose = new Translation2d(startingPose.getX() + 2, startingPose.getY() + 2),
-                                            currentPose = new Translation2d(currentPose.getX() - 2, currentPose.getY() - 2)
-                                        ),
-                                        new Pose2d(currentPose.getX() - 2, currentPose.getY() - 2, startingPose.getRotation()),
-                                        config);
-
-        // command = new CommandMerger(driveBase, exampleTrajectory, new commandWithIndex[] { 
-        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 1), 
-        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, -2, StopMotors.stop, Brakes.on), 2),
-        //         new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2)});
+        command = new CommandMerger(driveBase, new Translation2d[] {
+			new Translation2d(1, 1), 
+			new Translation2d(3, -2)
+		},  new commandWithIndex[] { 
+				new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 0), 
+				new commandWithIndex(new AutoStrafeProfiled(driveBase, -2, StopMotors.stop, Brakes.on), 1),
+				new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2)});
 		
 		commands.addCommands(command);
 		
