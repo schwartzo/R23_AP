@@ -3,8 +3,6 @@ package Team4450.Robot23.commands.autonomous;
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
-import Team4450.Robot23.commands.CommandMerger;
-import Team4450.Robot23.commands.CommandMerger.commandWithIndex;
 import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
 import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.StopMotors;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -91,17 +89,7 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 		
-        command = new CommandMerger(driveBase, new Translation2d[] {
-			new Translation2d(1, 1), 
-			new Translation2d(3, -2)
-		},  new commandWithIndex[] { 
-				new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 0), 
-				new commandWithIndex(new AutoStrafeProfiled(driveBase, -2, StopMotors.stop, Brakes.on), 1),
-				new commandWithIndex(new AutoStrafeProfiled(driveBase, 2, StopMotors.stop, Brakes.on), 2)});
-		
-		commands.addCommands(command);
-		
-		commands.schedule();
+        commands.schedule();
 	}
 	
 	/**

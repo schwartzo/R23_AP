@@ -1,23 +1,89 @@
 package Team4450.Robot23.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import Team4450.Robot23.commands.autonomous.AutoDriveProfiled;
+import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoStrafeProfiled;
-import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.Brakes;
-import Team4450.Robot23.commands.autonomous.AutoDriveProfiled.StopMotors;
+import Team4450.Robot23.subsystems.Arm;
+import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
-import edu.wpi.first.math.geometry.Pose2d;
+import Team4450.Robot23.subsystems.Winch;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class CommandMerger extends CommandBase {
+public class CommandSimplifier extends CommandBase {
     DriveBase driveBase;
+    Arm arm;
+    Winch winch;
+    Claw claw;
+
+    SequentialCommandGroup seqCmndGroup;
+    CommandType[] commandTypes;
+
+    public CommandSimplifier(DriveBase driveBase, Arm arm, Winch winch, Claw claw, CommandType... commandTypes) {
+        this.driveBase = driveBase;
+        this.arm = arm;
+        this.winch = winch;
+        this.claw = claw;
+        this.commandTypes = commandTypes;
+    }
+
+    public static class CommandType {
+        public enum commandType {
+            AutoSwerve,
+            AutoPositions
+        }
+
+        commandType type;
+
+        Translation2d coordinates;
+        public CommandType(Translation2d coordinates, commandType type) {
+            this.coordinates = coordinates;
+            this.type = type;
+        }
+    }
+
+    public void initialize() {
+        seqCmndGroup = new SequentialCommandGroup();
+
+        for (int i = 0; i < commandTypes.length - 1; i++) {
+            if (commandTypes[i].type == commandType.AutoSwerve); // seqCmndGroup.addCommands(new AutoSwerve(driveBase, commandType[i].coordinates.getX(), commandType[i].coordinates.getY(), StopMotors.stop, Brakes.on));
+        }
+
+        seqCmndGroup.schedule();
+    }
+}
+/*
+ * traj
+    * start
+    * target 1
+    * target 2
+    * target 3
+    * target 4
+ * 
+ * commands
+    * cmnd 1 at 2
+    * cmnd 2 at 4
+ * 
+ * goal
+    * target 1
+    * cmnd 1
+    * target 2
+    * target 3
+    * cmnd 2
+    * target 4 as final
+ * 
+ * take away
+    * command is before target at the same index
+    * 
+    * inital = previous target - 1
+    * first target = previous target
+    * final target = new target - 1
+    * final = new target
+ */
+
+ /*
+  * DriveBase driveBase;
 
     Translation2d[] movementArray;
     commandWithIndex[] commandsWithIndex;
@@ -90,32 +156,4 @@ public class CommandMerger extends CommandBase {
         //     seqCommandGroup.addCommands(convertedTrajList.get(a).command);
         // }
     }
-}
-/*
- * traj
-    * start
-    * target 1
-    * target 2
-    * target 3
-    * target 4
- * 
- * commands
-    * cmnd 1 at 2
-    * cmnd 2 at 4
- * 
- * goal
-    * target 1
-    * cmnd 1
-    * target 2
-    * target 3
-    * cmnd 2
-    * target 4 as final
- * 
- * take away
-    * command is before target at the same index
-    * 
-    * inital = previous target - 1
-    * first target = previous target
-    * final target = new target - 1
-    * final = new target
- */
+  */
