@@ -2,6 +2,7 @@ package Team4450.Robot23.commands;
 
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
+import Team4450.Robot23.commands.autonomous.AutoRotate;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.Brakes;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.FieldOriented;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.StopMotors;
@@ -76,10 +77,11 @@ public class CommandSimplifier extends CommandBase {
         for (CommandType command : commandTypes) {
             switch(command.type) {
                 case AutoFieldOrientedDriveProfiled:
-                    seqCmndGroup.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 
+                    seqCmndGroup.addCommands(new AutoDriveDiagonalProfiled(driveBase, 
                                                                                 command.coordinates.getX(), 
                                                                                 command.coordinates.getY(), 
-                                                                                StopMotors.stop, Brakes.on));
+                                                                                StopMotors.stop, Brakes.on, 
+                                                                                FieldOriented.on));
                     break;
 
                 case Rotate:
