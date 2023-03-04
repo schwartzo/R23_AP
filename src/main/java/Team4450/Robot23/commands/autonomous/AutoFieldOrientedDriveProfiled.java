@@ -2,6 +2,8 @@ package Team4450.Robot23.commands.autonomous;
 
 import static Team4450.Robot23.Constants.*;
 
+import javax.sound.midi.SysexMessage;
+
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
@@ -108,6 +110,8 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
                 getController().getSetpoint().position, getController().getPositionError(), yaw);
 
         iterations++;
+
+        System.out.println("Traveled distance at iteration " + iterations + " is " + driveBase.getDistanceTraveled() + ", want to reach " + distance);
     }
 
     @Override
