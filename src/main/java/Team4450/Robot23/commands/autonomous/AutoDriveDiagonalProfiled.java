@@ -34,7 +34,7 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     private FieldOriented fieldOriented;
 
     /**
-     * Drives robot to the specified distance using a motion profile with straight
+     * Drives robot to the specified distance at the specified heading using a motion profile with straight
      * steering.
      *
      * @param drive         The drive subsystem to use.
