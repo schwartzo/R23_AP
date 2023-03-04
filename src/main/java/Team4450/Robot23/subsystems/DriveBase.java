@@ -440,8 +440,8 @@ public class DriveBase extends SubsystemBase
     
     lastPose = currentPose;
     
-    double currentDistance = poseOffset.getX() + poseOffset.getY();
-    //double currentDistance = Math.sqrt(Math.pow(poseOffset.getX(), 2) + Math.pow(poseOffset.getY(), 2));
+    // double currentDistance = poseOffset.getX() + poseOffset.getY();
+    double currentDistance = Math.sqrt(Math.pow(poseOffset.getX(), 2) + Math.pow(poseOffset.getY(), 2));
 
     distanceTraveled += currentDistance;
 
