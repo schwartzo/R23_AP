@@ -4,12 +4,18 @@ import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
 import Team4450.Robot23.commands.CommandSimplifier;
+import Team4450.Robot23.commands.AutoPositions.ArmStateNames;
+import Team4450.Robot23.commands.AutoPositions.ClawStateNames;
+import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled;
 import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.Brakes;
 import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.StopMotors;
+import Team4450.Robot23.subsystems.Arm;
+import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
+import Team4450.Robot23.subsystems.Winch;
 
 import static Team4450.Robot23.Constants.*;
 
@@ -34,9 +40,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class TestingAuto extends CommandBase
 {
 	private final DriveBase driveBase;
+	private Arm arm;
+	private Winch winch;
+	private Claw claw;
 	
 	private SequentialCommandGroup	commands = null;
-    private Command					command = null;
 	private	Pose2d					startingPose;   
 
 	/**
@@ -93,17 +101,13 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 
-		// command = new CommandSimplifier(driveBase, null, null, null, new CommandType[] {
-		// 	new CommandType(new Translation2d(1, 2)),
-		// 	new CommandType(new Translation2d(-1, -3)),
-		// 	new CommandType(new Translation2d(0, 1))
-		// });
-
-		// commands.addCommands(command);
-
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, -1, -3, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, -1, StopMotors.stop, Brakes.on));
+		commands.addCommands(new CommandSimplifier(driveBase, arm, winch, claw, new CommandType[] {
+			new CommandType(new Translation2d(1, 2)),
+			new CommandType(new Translation2d(-1, -3)),
+			new CommandType(new Translation2d(0, 1)),
+			new CommandType(ComboStateNames.OBJECT_PICKUP),
+			new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
+		}));
 
 		commands.schedule();
 	}

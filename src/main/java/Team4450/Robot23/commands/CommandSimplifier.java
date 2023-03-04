@@ -33,8 +33,10 @@ public class CommandSimplifier extends CommandBase {
 
     public static class CommandType {
         public enum commandType {
-            AutoSwerve,
-            AutoPositions
+            AutoFieldOrientedDriveProfiled,
+            Rotate,
+            AutoPositionsCombo,
+            AutoPositionsManual
         }
 
         commandType type;
@@ -42,16 +44,56 @@ public class CommandSimplifier extends CommandBase {
         Translation2d coordinates;
         public CommandType(Translation2d coordinates) {
             this.coordinates = coordinates;
-            this.type = commandType.AutoSwerve;
+            this.type = commandType.AutoFieldOrientedDriveProfiled;
+        }
+
+        double rotation;
+        public CommandType(double rotation) {
+            this.rotation = rotation;
+            this.type = commandType.Rotate;
+        }
+
+        AutoPositions.ComboStateNames comboState;
+        public CommandType(AutoPositions.ComboStateNames comboState) {
+            this.comboState = comboState;
+            this.type = commandType.AutoPositionsCombo;
+        }
+
+        AutoPositions.ArmStateNames armState;
+        AutoPositions.WinchStateNames winchState;
+        AutoPositions.ClawStateNames clawState;
+        public CommandType(AutoPositions.ArmStateNames armState, AutoPositions.WinchStateNames winchState, AutoPositions.ClawStateNames clawState) {
+            this.armState = armState;
+            this.winchState = winchState;
+            this.clawState = clawState;
+            this.type = commandType.AutoPositionsManual;
         }
     }
 
     public void initialize() {
         seqCmndGroup = new SequentialCommandGroup();
+        
+        for (CommandType command : commandTypes) {
+            switch(command.type) {
+                case AutoFieldOrientedDriveProfiled:
+                    seqCmndGroup.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 
+                                                                                command.coordinates.getX(), 
+                                                                                command.coordinates.getY(), 
+                                                                                StopMotors.stop, Brakes.on));
+                    break;
 
-        for (int i = 0; i < commandTypes.length - 1; i++) {
-            if (commandTypes[i].type == commandType.AutoSwerve); 
-                seqCmndGroup.addCommands(new AutoDriveDiagonalProfiled(driveBase, commandTypes[i].coordinates.getX(), commandTypes[i].coordinates.getY(), StopMotors.stop, Brakes.on, FieldOriented.on));
+                case Rotate:
+                    seqCmndGroup.addCommands(new AutoRotate(driveBase, command.rotation));
+                    break;
+
+                case AutoPositionsCombo:
+                    seqCmndGroup.addCommands(new AutoPositions(arm, winch, claw, command.comboState));
+                    break;
+
+                case AutoPositionsManual:
+                    seqCmndGroup.addCommands(new AutoPositions(arm, winch, claw, command.armState, command.winchState, command.clawState));
+                    break;
+            }
         }
 
         seqCmndGroup.schedule();
