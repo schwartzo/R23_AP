@@ -103,7 +103,7 @@ public class TestingAuto extends CommandBase
 
 		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
 		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, -1, -3, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, -1, StopMotors.stop, Brakes.on));
 
 		commands.schedule();
 	}
@@ -117,7 +117,6 @@ public class TestingAuto extends CommandBase
 	@Override
 	public void execute() 
 	{
-		System.out.println("Robot is currently at " + driveBase.getRobotPose());
 	}
 	
 	/**
