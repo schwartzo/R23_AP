@@ -3,14 +3,21 @@ package Team4450.Robot23.commands.autonomous;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class MultiProfiledPIDCommand {
+/**
+ * A command that contains multiple profiled PID controllers, measurement and goal
+ * suppliers, and output consumers
+ */
+public class MultiProfiledPIDCommand extends CommandBase {
 
+    /**
+     * Container class for PID parameters
+     */
     public static class PID {
         public final ProfiledPIDController controller;
         public Supplier<Double> measurement;
@@ -50,10 +57,25 @@ public class MultiProfiledPIDCommand {
         controllers.add(new PID(controller, measurement, goal, output));
     }
 
-    protected void execute() {
+    @Override
+    public void initialize() {
+        for (PID p : controllers) {
+            p.controller.reset(p.measurement.get());
+        }
+    }
+
+    @Override
+    public void execute() {
         for (PID p : controllers) {
             p.output.accept(p.controller.calculate(p.measurement.get(), p.goal.get()),
                     p.controller.getSetpoint());
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        for (PID p : controllers) {
+            p.output.accept(0.0, new State());
         }
     }
 }
