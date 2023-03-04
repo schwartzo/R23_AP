@@ -15,7 +15,8 @@ import Team4450.Lib.Util;
 public class Winch extends SubsystemBase {
     private CANSparkMax winchMotor = new CANSparkMax(WINCH_MOTOR, MotorType.kBrushless);
     private RelativeEncoder winchEncoder = winchMotor.getEncoder();
-    private DigitalInput winchLimiter = new DigitalInput(WINCH_SWITCH);
+    private DigitalInput winchLowerLimiter = new DigitalInput(WINCH_SWITCH_LOWER);
+    private DigitalInput winchUpperLimiter = new DigitalInput(WINCH_SWITCH_UPPER);
 
     private final double MAX_WINCH_ROTATIONS = 1000;
 
@@ -24,8 +25,11 @@ public class Winch extends SubsystemBase {
     }
 
     public void setPower(double power) {
-        if (winchLimiter.get())
+        if (winchLowerLimiter.get())
             winchEncoder.setPosition(0);
+
+        if (winchUpperLimiter.get())
+            winchEncoder.setPosition(MAX_WINCH_ROTATIONS);
 
         winchMotor.set(
             ((power < 0 && maxDownwardRotation())
@@ -54,7 +58,7 @@ public class Winch extends SubsystemBase {
     }
 
     public boolean maxDownwardRotation() {
-        return winchLimiter.get();
+        return winchLowerLimiter.get();
     }
 
     public void updateDS() {
