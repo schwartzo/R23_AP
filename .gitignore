@@ -170,3 +170,4 @@ logging/logging.*.*
 *.zip
 
 networktables.json
+simgui-window.json

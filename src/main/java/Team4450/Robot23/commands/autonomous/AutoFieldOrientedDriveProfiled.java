@@ -140,19 +140,29 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
     }
 
     private static double getOutputMultiplierX(double distanceX, double distanceY) {
-        double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
-        double posOrNeg = (distanceX < 0) ? -1 : 1;
-        System.out.println("X: absX / absY = " + absX + " / " + absY + " = " + absX / absY + ", when posOrNeg its " + absX / absY * posOrNeg);
-        System.out.println("X OUTPUT: " + (absX > absY ? 1 : absX / absY * posOrNeg));
-        return absX > absY ? posOrNeg : absX / absY * posOrNeg;
+        return Math.abs(distanceX) > Math.abs(distanceY) ?
+            sign(distanceX) :
+            (Math.abs(distanceX) / Math.abs(distanceY)) * sign(distanceX);
+        // double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
+        // double posOrNeg = (distanceX < 0) ? -1 : 1;
+        // System.out.println("X: absX / absY = " + absX + " / " + absY + " = " + absX / absY + ", when posOrNeg its " + absX / absY * posOrNeg);
+        // System.out.println("X OUTPUT: " + (absX > absY ? 1 : absX / absY * posOrNeg));
+        // return absX > absY ? posOrNeg : absX / absY * posOrNeg;
     }
 
     private static double getOutputMultiplierY(double distanceX, double distanceY) {
-        double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
-        double posOrNeg = (distanceY < 0) ? -1 : 1;
-        System.out.println("Y: absY / absX = " + absY + " / " + absX + " = " + absY / absX + ", when posOrNeg its " + absY / absX * posOrNeg);
-        System.out.println("Y OUTPUT: " + (absY > absX ? 1 : absY / absX * posOrNeg));
-        return absY > absX ? posOrNeg : absY / absX * posOrNeg;
+        return Math.abs(distanceY) > Math.abs(distanceX) ?
+            sign(distanceY) :
+            (Math.abs(distanceY) / Math.abs(distanceX)) * sign(distanceY);
+        // double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
+        // double posOrNeg = (distanceY < 0) ? -1 : 1;
+        // System.out.println("Y: absY / absX = " + absY + " / " + absX + " = " + absY / absX + ", when posOrNeg its " + absY / absX * posOrNeg);
+        // System.out.println("Y OUTPUT: " + (absY > absX ? 1 : absY / absX * posOrNeg));
+        // return absY > absX ? posOrNeg : absY / absX * posOrNeg;
+    }
+
+    private static double sign(double x) {
+        return x == 0 ? 0 : x / Math.abs(x);
     }
 
     public enum Brakes {
