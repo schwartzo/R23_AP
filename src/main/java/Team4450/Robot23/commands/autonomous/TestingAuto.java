@@ -37,9 +37,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class TestingAuto extends CommandBase
 {
 	private final DriveBase driveBase;
-	private Arm arm;
-	private Winch winch;
-	private Claw claw;
+	private final Arm arm;
+	private final Winch winch;
+	private final Claw claw;
 	
 	private SequentialCommandGroup	commands = null;
 	private	Pose2d					startingPose;   
@@ -52,16 +52,19 @@ public class TestingAuto extends CommandBase
 	 * @param driveBase DriveBase subsystem used by this command to drive the robot.
 	 * @param startingPose Starting pose of the robot.
 	 */
-	public TestingAuto(DriveBase driveBase, Pose2d startingPose) 
+	public TestingAuto(DriveBase driveBase, Arm arm, Winch winch, Claw claw, Pose2d startingPose) 
 	{
 		Util.consoleLog();
 		
 		this.driveBase = driveBase;
+		this.arm = arm;
+		this.winch = winch;
+		this.claw = claw;
 
 		this.startingPose = startingPose;
 
 		// Use addRequirements() here to declare subsystem dependencies.
-		addRequirements(this.driveBase);
+		addRequirements(this.driveBase, this.arm, this.winch, this.claw);
 	}
 	
 	/**
