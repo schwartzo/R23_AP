@@ -94,16 +94,16 @@ public class TestingAuto extends CommandBase
 		commands = new SequentialCommandGroup();
 
 		// command = new CommandSimplifier(driveBase, null, null, null, new CommandType[] {
-		// 	new CommandType(new Translation2d(0, 2)),
-		// 	new CommandType(new Translation2d(-2, 0)),
-		// 	new CommandType(new Translation2d(2, -2))
+		// 	new CommandType(new Translation2d(1, 2)),
+		// 	new CommandType(new Translation2d(-1, -3)),
+		// 	new CommandType(new Translation2d(0, 1))
 		// });
 
 		// commands.addCommands(command);
 
 		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
 		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, -1, -3, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 5, -1, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
 
 		commands.schedule();
 	}
