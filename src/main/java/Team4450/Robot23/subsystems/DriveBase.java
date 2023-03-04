@@ -428,11 +428,7 @@ public class DriveBase extends SubsystemBase
     // Track the distance traveled by robot to support simulation of
     // a regular encoder. We do this by looking at the change in robot
     // pose and using the change in X,Y to compute the change in distance
-    // traveled and tracking that. NOTE: This currently only works for
-    // movements only in the X or Y direction. It will not be correct
-    // for diagonal moves. It also does not track rotations as distance
-    // traveled as technically a rotation is not moving a distance. This
-    // is all a kludge to support the simple autonomus functions.
+    // traveled and tracking that.
 
     Pose2d currentPose = m_odometry.getEstimatedPosition();
 
@@ -440,8 +436,8 @@ public class DriveBase extends SubsystemBase
     
     lastPose = currentPose;
     
-    double currentDistance = poseOffset.getX() + poseOffset.getY();
-    //double currentDistance = Math.sqrt(Math.pow(poseOffset.getX(), 2) + Math.pow(poseOffset.getY(), 2));
+    //double currentDistance = poseOffset.getX() + poseOffset.getY();
+    double currentDistance = Math.hypot(poseOffset.getX(), poseOffset.getY());
 
     distanceTraveled += currentDistance;
 
@@ -708,9 +704,7 @@ public class DriveBase extends SubsystemBase
    * Gets the distance traveled by the robot drive wheels since the
    * last call to resetDistanceTraveled. This simulates a regular
    * encoder on the drive wheel. We can't use the actual wheel encoder
-   * because resetting that encoder would crash the swerve drive code.
-   * Note: This distance is only accurate for forward/backward and
-   * strafe moves. 
+   * because resetting that encoder would crash the swerve drive code. 
    * @return
    */
   public double getDistanceTraveled()

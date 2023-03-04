@@ -1,9 +1,10 @@
 package Team4450.Robot23.commands;
 
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
-import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled;
-import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.Brakes;
-import Team4450.Robot23.commands.autonomous.AutoFieldOrientedDriveProfiled.StopMotors;
+import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
+import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.Brakes;
+import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.FieldOriented;
+import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.StopMotors;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -50,7 +51,7 @@ public class CommandSimplifier extends CommandBase {
 
         for (int i = 0; i < commandTypes.length - 1; i++) {
             if (commandTypes[i].type == commandType.AutoSwerve); 
-                seqCmndGroup.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, commandTypes[i].coordinates.getX(), commandTypes[i].coordinates.getY(), StopMotors.stop, Brakes.on));
+                seqCmndGroup.addCommands(new AutoDriveDiagonalProfiled(driveBase, commandTypes[i].coordinates.getX(), commandTypes[i].coordinates.getY(), StopMotors.stop, Brakes.on, FieldOriented.on));
         }
 
         seqCmndGroup.schedule();

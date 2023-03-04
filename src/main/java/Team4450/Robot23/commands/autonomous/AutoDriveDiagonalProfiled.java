@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
  * the robot to an appropriate speed and decelerate to a stop at the target
  * distance.
  */
-public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
+public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     private DriveBase driveBase;
 
     private static double kP = 1.2, kI = .15, kD = 0, kToleranceMeters = .10;
@@ -29,20 +29,22 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
     private int iterations;
     private StopMotors stop;
     private Brakes brakes;
+    private FieldOriented fieldOriented;
 
     /**
      * Drives robot to the specified distance using a motion profile with straight
      * steering.
      *
-     * @param drive     The drive subsystem to use.
-     * @param distanceX The distance to drive in meters along the X axis. + is
-     *                  forward.
-     * @param distanceY The distance to drive in meters along the Y axis. + is left.
-     * @param stop      Set to stop or not stop motors at end.
-     * @param brakes    If stopping, set brakes on or off.
+     * @param drive         The drive subsystem to use.
+     * @param distanceX     The distance to drive in meters along the X axis. + is
+     *                      forward.
+     * @param distanceY     The distance to drive in meters along the Y axis. + is left.
+     * @param stop          Set to stop or not stop motors at end.
+     * @param brakes        If stopping, set brakes on or off.
+     * @param fieldOriented Set to move relative to field or the robot
      */
-    public AutoFieldOrientedDriveProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
-            Brakes brakes) {
+    public AutoDriveDiagonalProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
+            Brakes brakes, FieldOriented fieldOriented) {
         super(
                 new ProfiledPIDController(kP, kI, kD,
                         new TrapezoidProfile.Constraints(MAX_WHEEL_SPEED, MAX_WHEEL_ACCEL)),
@@ -68,11 +70,17 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
         this.driveBase = driveBase;
         this.brakes = brakes;
         this.stop = stop;
+        this.fieldOriented = fieldOriented;
         this.distanceX = distanceX;
         this.distanceY = distanceY;
         this.distance = Math.hypot(distanceX, distanceY);
 
         getController().setTolerance(kToleranceMeters);
+    }
+
+    public static AutoDriveDiagonalProfiled withHeading(DriveBase driveBase, double distance, double heading, StopMotors stop,
+            Brakes brakes, FieldOriented fieldOriented) {
+        return new AutoDriveDiagonalProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)), distance * Math.sin(Math.toRadians(heading)), stop, brakes, fieldOriented);
     }
 
     @Override
@@ -89,7 +97,8 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
 
         driveBase.resetDistanceTraveled();
 
-        driveBase.toggleFieldOriented();
+        if (fieldOriented == FieldOriented.on && !driveBase.getFieldOriented())
+            driveBase.toggleFieldOriented();
 
         driveBase.resetYaw();
     }
@@ -128,11 +137,12 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
 
         double actualDist = Math.abs(driveBase.getDistanceTraveled());
 
-        Util.consoleLog("end: target=%.3f  actual=%.3f  error=%.2f pct  yaw=%.2f hdng=%.2f",
+        Util.consoleLog("end: target=%.3f  actual=%.3f  error=%.2f pct  yaw=%.2f  hdng=%.2f",
                 Math.abs(distance), actualDist, (actualDist - Math.abs(distance)) / Math.abs(distance) * 100.0,
                 driveBase.getYaw(), RobotContainer.navx.getHeading());
 
-        driveBase.toggleFieldOriented();
+        if (fieldOriented == FieldOriented.on && driveBase.getFieldOriented())
+            driveBase.toggleFieldOriented();
 
         Util.consoleLog("iterations=%d  elapsed time=%.3fs", iterations, Util.getElaspedTime(startTime));
 
@@ -174,5 +184,10 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
     public enum StopMotors {
         dontStop,
         stop
+    }
+
+    public enum FieldOriented {
+        off,
+        on
     }
 }
