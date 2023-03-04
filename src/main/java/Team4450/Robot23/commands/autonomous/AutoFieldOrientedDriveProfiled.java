@@ -48,9 +48,9 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
                         new TrapezoidProfile.Constraints(MAX_WHEEL_SPEED, MAX_WHEEL_ACCEL)),
                 // Closed loop on distance via reference so pid controller can call it on each
                 // execute() call.
-                driveBase::getDistanceTraveled,
+                () -> Math.abs(driveBase.getDistanceTraveled()),
                 // Set target distance.
-                Math.hypot(Math.abs(distanceX), Math.abs(distanceY)),
+                Math.hypot(distanceX, distanceY),
                 // Pipe output to drive robot.
                 (output, setpoint) -> driveBase.drive(output * getOutputMultiplierX(distanceX, distanceY), 
                                                       output * getOutputMultiplierY(distanceX, distanceY), 
@@ -70,7 +70,7 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
         this.stop = stop;
         this.distanceX = distanceX;
         this.distanceY = distanceY;
-        this.distance = Math.hypot(Math.abs(distanceX), Math.abs(distanceY));
+        this.distance = Math.hypot(distanceX, distanceY);
 
         getController().setTolerance(kToleranceMeters);
     }
@@ -140,11 +140,19 @@ public class AutoFieldOrientedDriveProfiled extends ProfiledPIDCommand {
     }
 
     private static double getOutputMultiplierX(double distanceX, double distanceY) {
-        return distanceX > distanceY ? 1 : distanceX / distanceY;
+        double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
+        double posOrNeg = (distanceX < 0) ? -1 : 1;
+        System.out.println("X: absX / absY = " + absX + " / " + absY + " = " + absX / absY + ", when posOrNeg its " + absX / absY * posOrNeg);
+        System.out.println("X OUTPUT: " + (absX > absY ? 1 : absX / absY * posOrNeg));
+        return absX > absY ? posOrNeg : absX / absY * posOrNeg;
     }
 
     private static double getOutputMultiplierY(double distanceX, double distanceY) {
-        return distanceY > distanceX ? 1 : distanceY / distanceX;
+        double absX = Math.abs(distanceX), absY = Math.abs(distanceY);
+        double posOrNeg = (distanceY < 0) ? -1 : 1;
+        System.out.println("Y: absY / absX = " + absY + " / " + absX + " = " + absY / absX + ", when posOrNeg its " + absY / absX * posOrNeg);
+        System.out.println("Y OUTPUT: " + (absY > absX ? 1 : absY / absX * posOrNeg));
+        return absY > absX ? posOrNeg : absY / absX * posOrNeg;
     }
 
     public enum Brakes {

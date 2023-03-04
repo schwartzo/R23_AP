@@ -102,8 +102,8 @@ public class TestingAuto extends CommandBase
 		// commands.addCommands(command);
 
 		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 1, 2, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 2, 0, StopMotors.stop, Brakes.on));
-		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 2, 2, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, -1, -3, StopMotors.stop, Brakes.on));
+		commands.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, 5, -1, StopMotors.stop, Brakes.on));
 
 		commands.schedule();
 	}

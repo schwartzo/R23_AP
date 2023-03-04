@@ -49,10 +49,7 @@ public class CommandSimplifier extends CommandBase {
         seqCmndGroup = new SequentialCommandGroup();
 
         for (int i = 0; i < commandTypes.length - 1; i++) {
-            System.out.println("Command type at index " + (i + 1) + " was " + commandTypes[i].type.toString());
-
             if (commandTypes[i].type == commandType.AutoSwerve); 
-                System.out.println("Moving by (" + commandTypes[i].coordinates.getX() + ", " + commandTypes[i].coordinates.getY() + ")");
                 seqCmndGroup.addCommands(new AutoFieldOrientedDriveProfiled(driveBase, commandTypes[i].coordinates.getX(), commandTypes[i].coordinates.getY(), StopMotors.stop, Brakes.on));
         }
 
