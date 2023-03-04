@@ -34,7 +34,7 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     private FieldOriented fieldOriented;
 
     /**
-     * Drives robot to the specified distance using a motion profile with straight
+     * Drives robot to the specified distance at the specified heading using a motion profile with straight
      * steering.
      *
      * @param drive         The drive subsystem to use.
@@ -43,7 +43,7 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
      * @param distanceY     The distance to drive in meters along the Y axis. + is left.
      * @param stop          Set to stop or not stop motors at end.
      * @param brakes        If stopping, set brakes on or off.
-     * @param fieldOriented Set to move relative to field or the robot
+     * @param fieldOriented Set to move relative to field or the robot.
      */
     public AutoDriveDiagonalProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
             Brakes brakes, FieldOriented fieldOriented) {
@@ -64,8 +64,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
         // interrupt the calling auto command.
         // );
 
-        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s", distanceX, distanceY,
-                distance, stop, brakes);
+        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
+                distanceX, distanceY, distance, stop, brakes, fieldOriented);
 
         Util.consoleLog("kP=%.6f  kI=%.6f", kP, kI);
 
@@ -80,15 +80,29 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
         getController().setTolerance(kToleranceMeters);
     }
 
+    /**
+     * Drives robot to the specified distance using a motion profile with straight
+     * steering.
+     *
+     * @param drive         The drive subsystem to use.
+     * @param distance      The distance to drive in meters. + is
+     *                      forward.
+     * @param heading       The angle to drive at in degrees. + is left.
+     * @param stop          Set to stop or not stop motors at end.
+     * @param brakes        If stopping, set brakes on or off.
+     * @param fieldOriented Set to move relative to field or the robot.
+     * @return              A new command instance with specified parameters.
+     */
     public static AutoDriveDiagonalProfiled withHeading(DriveBase driveBase, double distance, double heading, StopMotors stop,
             Brakes brakes, FieldOriented fieldOriented) {
-        return new AutoDriveDiagonalProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)), distance * Math.sin(Math.toRadians(heading)), stop, brakes, fieldOriented);
+        return new AutoDriveDiagonalProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)),
+                distance * Math.sin(Math.toRadians(heading)), stop, brakes, fieldOriented);
     }
 
     @Override
     public void initialize() {
-        Util.consoleLog("distanceX=%.3f  distanceY=%.3f  distance=%.3fm  stop=%s  brakes=%s", distanceX, distanceY,
-                distance, stop, brakes);
+        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
+                distanceX, distanceY, distance, stop, brakes, fieldOriented);
 
         startTime = Util.timeStamp();
 
