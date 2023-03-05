@@ -2,8 +2,6 @@ package Team4450.Robot23.commands.autonomous;
 
 import static Team4450.Robot23.Constants.*;
 
-import javax.sound.midi.SysexMessage;
-
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
@@ -14,14 +12,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
 /**
- * A command that will drive the robot in any direction to the specified
- * distances using
- * a motion profiled PID command and steering correction. Velocity &
- * acceleration are a
- * guess, need to characterize the robot for good numbers. Motion profile will
- * accelerate
- * the robot to an appropriate speed and decelerate to a stop at the target
- * distance.
+ * A command that will drive the robot in any direction to the specified distances using
+ * a motion profiled PID command and steering correction. Velocity & acceleration are a
+ * guess, need to characterize the robot for good numbers. Motion profile will accelerate
+ * the robot to an appropriate speed and decelerate to a stop at the target distance.
  */
 public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     private DriveBase driveBase;
