@@ -53,7 +53,7 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
      * @param brakes        If stopping, set brakes on or off.
      * @param fieldOriented Set to move relative to field or the robot.
      */
-    public AutoCombinedDriveRotateProfiled(DriveBase driveBase, double distanceX, double distanceY, double targetAngle, StopMotors stop,
+    private AutoCombinedDriveRotateProfiled(DriveBase driveBase, double distanceX, double distanceY, double targetAngle, StopMotors stop,
             Brakes brakes, FieldOriented fieldOriented)
     {
         super();
@@ -74,13 +74,14 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
                 new ProfiledPIDController(kPRotate, kIDrive, kDRotate,
                         new TrapezoidProfile.Constraints(
                         Math.toRadians(Constants.MAX_ROTATIONAL_VEL),
-                        Math.toDegrees(Constants.MAX_ROTATIONAL_ACCEL))),
+                        Math.toRadians(Constants.MAX_ROTATIONAL_ACCEL))),
                 driveBase::getYawR,
                 stateSupplier(() -> Math.toRadians(targetAngle)),
                 (output, setpoint) -> instance.setRotation(output));
 
-        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  angle=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
-                distanceX, distanceY, distance, targetAngle, stop, brakes, fieldOriented);
+        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  angle=%.3fr  rotate=%.3fr  stop=%s  brakes=%s  fieldOriented=%s",
+                distanceX, distanceY, distance, Math.atan(distanceY / distanceX),
+                targetAngle, stop, brakes, fieldOriented);
 
         Util.consoleLog("[drive]     kP=%.6f  kI=%.6f", kPDrive, kIDrive);
         Util.consoleLog("[rotation]  kP=%.6f  kI=%.6f", kPRotate, kIRotate);
@@ -106,6 +107,26 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
      * steering toward a given target angle.
      *
      * @param drive         The drive subsystem to use.
+     * @param distanceX     The distance to drive in meters along the X axis. + is forward.
+     * @param distanceY     The distance to drive in meters along the Y axis. + is left.
+     * @param targetAngle   The angle to rotate in degrees. + is left.
+     * @param stop          Set to stop or not stop motors at end.
+     * @param brakes        If stopping, set brakes on or off.
+     * @param fieldOriented Set to move relative to field or the robot.
+     * @return              A new command instance with specified parameters.
+     */
+    public static AutoCombinedDriveRotateProfiled cartes(DriveBase driveBase, double distanceX, double distanceY,
+            double targetAngle, StopMotors stop, Brakes brakes, FieldOriented fieldOriented)
+    {
+        return new AutoCombinedDriveRotateProfiled(driveBase, distanceX,
+                distanceY, targetAngle, stop, brakes, fieldOriented);
+    }
+
+    /**
+     * Drives robot to the specified distance using a motion profile while
+     * steering toward a given target angle.
+     *
+     * @param drive         The drive subsystem to use.
      * @param distance      The distance to drive in meters. + is forward.
      * @param heading       The angle to drive at in degrees. + is left.
      * @param stop          Set to stop or not stop motors at end.
@@ -113,8 +134,8 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
      * @param fieldOriented Set to move relative to field or the robot.
      * @return              A new command instance with specified parameters.
      */
-    public static AutoCombinedDriveRotateProfiled withHeading(DriveBase driveBase, double distance, double heading, double targetAngle, StopMotors stop,
-            Brakes brakes, FieldOriented fieldOriented)
+    public static AutoCombinedDriveRotateProfiled polar(DriveBase driveBase, double distance, double heading,
+            double targetAngle, StopMotors stop, Brakes brakes, FieldOriented fieldOriented)
     {
         return new AutoCombinedDriveRotateProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)),
                 distance * Math.sin(Math.toRadians(heading)), targetAngle, stop, brakes, fieldOriented);

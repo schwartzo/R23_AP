@@ -39,7 +39,7 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand
      * @param brakes        If stopping, set brakes on or off.
      * @param fieldOriented Set to move relative to field or the robot.
      */
-    public AutoDriveDiagonalProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
+    private AutoDriveDiagonalProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
             Brakes brakes, FieldOriented fieldOriented)
     {
         super(
@@ -55,8 +55,9 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand
                         output * getOutputMultiplierY(distanceX, distanceY), 
                         0));
 
-        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
-                distanceX, distanceY, distance, stop, brakes, fieldOriented);
+        Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  angle=%.3fr  stop=%s  brakes=%s  fieldOriented=%s",
+                distanceX, distanceY, distance, Math.atan(distanceY/ distanceX),
+                stop, brakes, fieldOriented);
 
         Util.consoleLog("kP=%.6f  kI=%.6f", kP, kI);
 
@@ -72,6 +73,25 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand
     }
 
     /**
+     * Drives robot to the specified distance at the specified heading using a motion profile with straight
+     * steering.
+     *
+     * @param drive         The drive subsystem to use.
+     * @param distanceX     The distance to drive in meters along the X axis. + is forward.
+     * @param distanceY     The distance to drive in meters along the Y axis. + is left.
+     * @param stop          Set to stop or not stop motors at end.
+     * @param brakes        If stopping, set brakes on or off.
+     * @param fieldOriented Set to move relative to field or the robot.
+     * @return              A new command instance with specified parameters.
+     */
+    public static AutoDriveDiagonalProfiled cartes(DriveBase driveBase, double distanceX, double distanceY,
+            StopMotors stop, Brakes brakes, FieldOriented fieldOriented)
+    {
+        return new AutoDriveDiagonalProfiled(driveBase, distanceX,
+                distanceY, stop, brakes, fieldOriented);
+    }
+
+    /**
      * Drives robot to the specified distance using a motion profile with straight
      * steering.
      *
@@ -84,8 +104,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand
      * @param fieldOriented Set to move relative to field or the robot.
      * @return              A new command instance with specified parameters.
      */
-    public static AutoDriveDiagonalProfiled withHeading(DriveBase driveBase, double distance, double heading, StopMotors stop,
-            Brakes brakes, FieldOriented fieldOriented)
+    public static AutoDriveDiagonalProfiled polar(DriveBase driveBase, double distance, double heading,
+            StopMotors stop, Brakes brakes, FieldOriented fieldOriented)
     {
         return new AutoDriveDiagonalProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)),
                 distance * Math.sin(Math.toRadians(heading)), stop, brakes, fieldOriented);
