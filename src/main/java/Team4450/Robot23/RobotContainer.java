@@ -16,8 +16,11 @@ import Team4450.Lib.MonitorCompressor;
 import Team4450.Lib.MonitorPDP;
 import Team4450.Lib.NavX;
 import Team4450.Lib.Util;
+import Team4450.Robot23.commands.ArmCommand;
+import Team4450.Robot23.commands.ClawCommand;
 import Team4450.Robot23.commands.DriveCommand;
 import Team4450.Robot23.commands.SetToStartPositionCommand;
+import Team4450.Robot23.commands.WinchCommand;
 import Team4450.Robot23.commands.Utility.NotifierCommand;
 import Team4450.Robot23.commands.autonomous.ChargeStationAuto;
 import Team4450.Robot23.commands.autonomous.DoubleConeAuto;
@@ -234,6 +237,18 @@ public class RobotContainer
 				() -> driverPad.getLeftX(),	// Strafe
 				driverPad.getRightXDS(),	// Rotation
 				driverPad));
+
+		arm.setDefaultCommand(new ArmCommand(
+				arm,
+				() -> utilityPad.getLeftY()));
+
+		winch.setDefaultCommand(new WinchCommand(
+				winch,
+				() -> utilityPad.getRightY()));
+			
+		claw.setDefaultCommand(new ClawCommand(
+				claw,
+				() -> utilityPad.getRightX()));
 
 		// Start the compressor, PDP and camera feed monitoring Tasks.
 
