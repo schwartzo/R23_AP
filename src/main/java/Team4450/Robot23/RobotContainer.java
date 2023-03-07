@@ -17,10 +17,15 @@ import Team4450.Lib.MonitorPDP;
 import Team4450.Lib.NavX;
 import Team4450.Lib.Util;
 import Team4450.Robot23.commands.ArmCommand;
+import Team4450.Robot23.commands.AutoPositions;
 import Team4450.Robot23.commands.ClawCommand;
 import Team4450.Robot23.commands.DriveCommand;
 import Team4450.Robot23.commands.SetToStartPositionCommand;
 import Team4450.Robot23.commands.WinchCommand;
+import Team4450.Robot23.commands.AutoPositions.ArmStateNames;
+import Team4450.Robot23.commands.AutoPositions.ClawStateNames;
+import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
+import Team4450.Robot23.commands.AutoPositions.WinchStateNames;
 import Team4450.Robot23.commands.Utility.NotifierCommand;
 import Team4450.Robot23.commands.autonomous.ChargeStationAuto;
 import Team4450.Robot23.commands.autonomous.DoubleConeAuto;
@@ -371,6 +376,36 @@ public class RobotContainer
         	//.onTrue(new PickupDeploy(pickup));		
 			//.onTrue(new InstantCommand(pickup::toggleDeploy, pickup));
 		//	.onTrue(new NotifierCommand(pickup::toggleDeploy, 0.0, "DeployPickup", pickup));
+
+		new Trigger(() -> utilityPad.getPOVAngle(0))
+				.onTrue(new AutoPositions(arm, winch, claw, ComboStateNames.FULLY_CONTAINED));
+
+		new Trigger(() -> utilityPad.getPOVAngle(180))
+				.onTrue(new AutoPositions(arm, winch, claw, ArmStateNames.FULLY_CONTAINED, null, null));
+
+		new Trigger(() -> utilityPad.getRightTrigger())
+				.onTrue(new AutoPositions(arm, winch, claw, null, null, ClawStateNames.FULLY_OPEN));
+
+		new Trigger(() -> utilityPad.getLeftTrigger())
+				.onTrue(new AutoPositions(arm, winch, claw, null, null, ClawStateNames.HOLDING_CONE));
+
+		new Trigger(() -> utilityPad.getLeftBumper())
+				.onTrue(new AutoPositions(arm, winch, claw, null, null, ClawStateNames.HOLDING_CUBE));
+
+		new Trigger(() -> utilityPad.getRightBumper())
+				.onTrue(new AutoPositions(arm, winch, claw, null, WinchStateNames.LOWEST_SCORING, null));
+
+		new Trigger(() -> utilityPad.getYButton())
+				.onTrue(new AutoPositions(arm, winch, claw, null, WinchStateNames.MIDDLE_SCORING, null));
+
+		new Trigger(() -> utilityPad.getXButton())
+				.onTrue(new AutoPositions(arm, winch, claw, null, WinchStateNames.HIGHEST_SCORING, null));
+
+		new Trigger(() -> utilityPad.getAButton())
+				.onTrue(new AutoPositions(arm, winch, claw, ArmStateNames.MIDDLE_SCORING, null, null));
+
+		new Trigger(() -> utilityPad.getBButton())
+				.onTrue(new AutoPositions(arm, winch, claw, ArmStateNames.HIGHEST_SCORING, null, null));
 
 	}
 
