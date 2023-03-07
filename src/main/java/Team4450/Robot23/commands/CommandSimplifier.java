@@ -77,7 +77,7 @@ public class CommandSimplifier extends CommandBase {
         for (CommandType command : commandTypes) {
             switch(command.type) {
                 case AutoFieldOrientedDriveProfiled:
-                    seqCmndGroup.addCommands(new AutoDriveDiagonalProfiled(driveBase, 
+                    seqCmndGroup.addCommands(AutoDriveDiagonalProfiled.cartes(driveBase, 
                                                                                 command.coordinates.getX(), 
                                                                                 command.coordinates.getY(), 
                                                                                 StopMotors.stop, Brakes.on, 
