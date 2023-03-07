@@ -431,7 +431,7 @@ public class RobotContainer
 				break;
 
 			case TestingAuto:
-				autoCommand = new TestingAuto(driveBase, startingPose);
+				autoCommand = new TestingAuto(driveBase, arm, winch, claw, startingPose);
 				break;
 		}
         

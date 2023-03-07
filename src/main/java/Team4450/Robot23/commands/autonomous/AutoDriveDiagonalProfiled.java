@@ -2,8 +2,6 @@ package Team4450.Robot23.commands.autonomous;
 
 import static Team4450.Robot23.Constants.*;
 
-import javax.sound.midi.SysexMessage;
-
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot23.RobotContainer;
@@ -14,23 +12,20 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
 /**
- * A command that will drive the robot in any direction to the specified
- * distances using
- * a motion profiled PID command and steering correction. Velocity &
- * acceleration are a
- * guess, need to characterize the robot for good numbers. Motion profile will
- * accelerate
- * the robot to an appropriate speed and decelerate to a stop at the target
- * distance.
+ * A command that will drive the robot in any direction to the specified distances using
+ * a motion profiled PID command and steering correction. Velocity & acceleration are a
+ * guess, need to characterize the robot for good numbers. Motion profile will accelerate
+ * the robot to an appropriate speed and decelerate to a stop at the target distance.
  */
-public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
+public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand
+{
     private DriveBase driveBase;
 
     private static double kP = 1.2, kI = .15, kD = 0, kToleranceMeters = .10;
-    private double distanceX, distanceY, distance, startTime;
-    private int iterations;
-    private StopMotors stop;
-    private Brakes brakes;
+    private double        distanceX, distanceY, distance, startTime;
+    private int           iterations;
+    private StopMotors    stop;
+    private Brakes        brakes;
     private FieldOriented fieldOriented;
 
     /**
@@ -38,15 +33,15 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
      * steering.
      *
      * @param drive         The drive subsystem to use.
-     * @param distanceX     The distance to drive in meters along the X axis. + is
-     *                      forward.
+     * @param distanceX     The distance to drive in meters along the X axis. + is forward.
      * @param distanceY     The distance to drive in meters along the Y axis. + is left.
      * @param stop          Set to stop or not stop motors at end.
      * @param brakes        If stopping, set brakes on or off.
      * @param fieldOriented Set to move relative to field or the robot.
      */
     public AutoDriveDiagonalProfiled(DriveBase driveBase, double distanceX, double distanceY, StopMotors stop,
-            Brakes brakes, FieldOriented fieldOriented) {
+            Brakes brakes, FieldOriented fieldOriented)
+    {
         super(
                 new ProfiledPIDController(kP, kI, kD,
                         new TrapezoidProfile.Constraints(MAX_WHEEL_SPEED, MAX_WHEEL_ACCEL)),
@@ -57,12 +52,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
                 Math.hypot(distanceX, distanceY),
                 // Pipe output to drive robot.
                 (output, setpoint) -> driveBase.drive(output * getOutputMultiplierX(distanceX, distanceY), 
-                                                      output * getOutputMultiplierY(distanceX, distanceY), 
-                                                      0));
-        // Require the drive base. Note: the db is required by the calling
-        // autonmous command so we don't need it here and doing it here will
-        // interrupt the calling auto command.
-        // );
+                        output * getOutputMultiplierY(distanceX, distanceY), 
+                        0));
 
         Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
                 distanceX, distanceY, distance, stop, brakes, fieldOriented);
@@ -94,13 +85,15 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
      * @return              A new command instance with specified parameters.
      */
     public static AutoDriveDiagonalProfiled withHeading(DriveBase driveBase, double distance, double heading, StopMotors stop,
-            Brakes brakes, FieldOriented fieldOriented) {
+            Brakes brakes, FieldOriented fieldOriented)
+    {
         return new AutoDriveDiagonalProfiled(driveBase, distance * Math.cos(Math.toRadians(heading)),
                 distance * Math.sin(Math.toRadians(heading)), stop, brakes, fieldOriented);
     }
 
     @Override
-    public void initialize() {
+    public void initialize()
+    {
         Util.consoleLog("distanceX=%.3fm  distanceY=%.3fm  distance=%.3fm  stop=%s  brakes=%s  fieldOriented=%s",
                 distanceX, distanceY, distance, stop, brakes, fieldOriented);
 
@@ -119,7 +112,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
         driveBase.resetYaw();
     }
 
-    public void execute() {
+    public void execute()
+    {
         Util.consoleLog();
 
         double yaw = -driveBase.getYaw(); // Invert to swerve angle convention.
@@ -138,7 +132,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished()
+    {
         // End when the target distance is reached. The PIDController atGoal and
         // atSetPoint
         // functions do not seem to work. Don't know why.
@@ -147,7 +142,8 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interrupted)
+    {
         Util.consoleLog("interrupted=%b", interrupted);
 
         if (stop == StopMotors.stop)
@@ -167,36 +163,29 @@ public class AutoDriveDiagonalProfiled extends ProfiledPIDCommand {
         Util.consoleLog("end ---------------------------------------------------------------");
     }
 
-    private static double getOutputMultiplierX(double distanceX, double distanceY) {
+    private static double getOutputMultiplierX(double distanceX, double distanceY)
+    {
         return Math.abs(distanceX) > Math.abs(distanceY) ?
             sign(distanceX) :
             (Math.abs(distanceX) / Math.abs(distanceY)) * sign(distanceX);
     }
 
-    private static double getOutputMultiplierY(double distanceX, double distanceY) {
+    private static double getOutputMultiplierY(double distanceX, double distanceY)
+    {
         return Math.abs(distanceY) > Math.abs(distanceX) ?
             sign(distanceY) :
             (Math.abs(distanceY) / Math.abs(distanceX)) * sign(distanceY);
     }
 
-    private static double sign(double x) {
+    private static double sign(double x)
+    {
         return x == 0 ? 0 : x / Math.abs(x);
     }
 
-    public enum Brakes {
+    public enum Brakes
+    {
         off,
         on
-    }
-
-    public enum Pid {
-        off,
-        on
-    }
-
-    public enum Heading {
-        angle,
-        heading,
-        totalAngle
     }
 
     public enum StopMotors {
