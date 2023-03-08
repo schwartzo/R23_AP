@@ -10,6 +10,7 @@ public class AutoArm extends CommandBase {
     private final Arm arm;
     private double targetRevolutions;
     private SynchronousPID syncPID;
+    private double Kp, Ki, Kd;
     private double tolerance;
     private double lastTimeCalled;
 
@@ -28,6 +29,8 @@ public class AutoArm extends CommandBase {
     @Override
     public void initialize() {
         Util.consoleLog();
+
+        syncPID = new SynchronousPID(Kp, Ki, Kd);
 
         lastTimeCalled = Util.timeStamp();
 

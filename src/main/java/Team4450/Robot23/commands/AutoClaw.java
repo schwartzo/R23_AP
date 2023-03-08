@@ -10,6 +10,7 @@ public class AutoClaw extends CommandBase {
     private final Claw claw;
     private double targetRevolutions;
     private SynchronousPID syncPID;
+    private double Kp, Ki, Kd;
     private double tolerance;
     private double lastTimeCalled;
 
@@ -28,6 +29,8 @@ public class AutoClaw extends CommandBase {
     @Override
     public void initialize() {
         Util.consoleLog();
+
+        syncPID = new SynchronousPID(Kp, Ki, Kd);
 
         lastTimeCalled = Util.timeStamp();
 

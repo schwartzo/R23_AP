@@ -20,6 +20,7 @@ public class AutoBalance extends CommandBase {
     private double initialSpeed = 0.0;
 
     private SynchronousPID pidController;
+    private double Kp, Ki, Kd;
 
     public AutoBalance(DriveBase driveBase) {
         Util.consoleLog();
@@ -39,6 +40,8 @@ public class AutoBalance extends CommandBase {
     }
 
     public void initialize() {
+        pidController = new SynchronousPID(Kp, Ki, Kd);
+
         if (initialSpeed == 0)
             resetYaw();
         else
