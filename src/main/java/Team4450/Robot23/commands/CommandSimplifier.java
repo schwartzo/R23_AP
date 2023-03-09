@@ -1,6 +1,7 @@
 package Team4450.Robot23.commands;
 
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
+import Team4450.Robot23.commands.autonomous.AutoCombinedDriveRotateProfiled;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
 import Team4450.Robot23.commands.autonomous.AutoRotate;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled.Brakes;
@@ -34,8 +35,9 @@ public class CommandSimplifier extends CommandBase {
 
     public static class CommandType {
         public enum commandType {
-            AutoFieldOrientedDriveProfiled,
+            AutoDriveDiagonalProfiled,
             Rotate,
+            AutoCombinedDriveRotateProfiled,
             AutoPositionsCombo,
             AutoPositionsManual
         }
@@ -45,8 +47,13 @@ public class CommandSimplifier extends CommandBase {
         Translation2d coordinates;
         public CommandType(Translation2d coordinates) {
             this.coordinates = coordinates;
-            this.type = commandType.AutoFieldOrientedDriveProfiled;
+            this.type = commandType.AutoDriveDiagonalProfiled;
         }
+
+        public static CommandType moveRobot(double x, double y) {
+            return new CommandType(new Translation2d(x, y));
+        }
+
 
         double rotation;
         public CommandType(double rotation) {
@@ -54,20 +61,49 @@ public class CommandSimplifier extends CommandBase {
             this.type = commandType.Rotate;
         }
 
+        public static CommandType rotateRobot(double rotation) {
+            return new CommandType(rotation);
+        }
+
+
+        public CommandType(double x, double y, double rotation) {
+            this.coordinates = new Translation2d(x, y);
+            this.rotation = rotation;
+            this.type = commandType.AutoCombinedDriveRotateProfiled;
+        }
+
+        public static CommandType moveAndRotate(double x, double y, double rotation) {
+            return new CommandType(x, y, rotation);
+        }
+
+
         AutoPositions.ComboStateNames comboState;
         public CommandType(AutoPositions.ComboStateNames comboState) {
             this.comboState = comboState;
             this.type = commandType.AutoPositionsCombo;
         }
 
+        public static CommandType comboPosition(AutoPositions.ComboStateNames comboState) {
+            return new CommandType(comboState);
+        }
+
+
         AutoPositions.ArmStateNames armState;
         AutoPositions.WinchStateNames winchState;
         AutoPositions.ClawStateNames clawState;
-        public CommandType(AutoPositions.ArmStateNames armState, AutoPositions.WinchStateNames winchState, AutoPositions.ClawStateNames clawState) {
+        public CommandType(AutoPositions.ArmStateNames armState, 
+                           AutoPositions.WinchStateNames winchState, 
+                           AutoPositions.ClawStateNames clawState) {
             this.armState = armState;
             this.winchState = winchState;
             this.clawState = clawState;
             this.type = commandType.AutoPositionsManual;
+        }
+
+        public static CommandType manualPosition(AutoPositions.ArmStateNames armState, 
+                                                 AutoPositions.WinchStateNames winchState, 
+                                                 AutoPositions.ClawStateNames clawState) {
+            return new CommandType(armState, winchState, clawState);
         }
     }
 
@@ -76,7 +112,7 @@ public class CommandSimplifier extends CommandBase {
         
         for (CommandType command : commandTypes) {
             switch(command.type) {
-                case AutoFieldOrientedDriveProfiled:
+                case AutoDriveDiagonalProfiled:
                     seqCmndGroup.addCommands(AutoDriveDiagonalProfiled.cartes(driveBase, 
                                                                                 command.coordinates.getX(), 
                                                                                 command.coordinates.getY(), 
@@ -87,6 +123,15 @@ public class CommandSimplifier extends CommandBase {
                 case Rotate:
                     seqCmndGroup.addCommands(new AutoRotate(driveBase, command.rotation));
                     break;
+
+                case AutoCombinedDriveRotateProfiled:
+                    seqCmndGroup.addCommands(AutoCombinedDriveRotateProfiled.cartes(driveBase, 
+                                                                                    command.coordinates.getX(), 
+                                                                                    command.coordinates.getY(), 
+                                                                                    command.rotation, 
+                                                                                    AutoCombinedDriveRotateProfiled.StopMotors.stop, 
+                                                                                    AutoCombinedDriveRotateProfiled.Brakes.on, 
+                                                                                    AutoCombinedDriveRotateProfiled.FieldOriented.on));
 
                 case AutoPositionsCombo:
                     seqCmndGroup.addCommands(new AutoPositions(arm, winch, claw, command.comboState));
