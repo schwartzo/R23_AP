@@ -22,10 +22,10 @@ public class AutoDriveTargeted extends CommandBase {
                                               targetCoords.getY() - driveBase.getOdometry().getEstimatedPosition().getY());
     }
 
-    public AutoDriveTargeted(DriveBase driveBase, double xPosition, double yPosition) {
+    public AutoDriveTargeted(DriveBase driveBase, double xTarget, double yTarget) {
         this.driveBase = driveBase;
-        this.targetCoords = new Translation2d(xPosition - driveBase.getOdometry().getEstimatedPosition().getX(), 
-                                              yPosition - driveBase.getOdometry().getEstimatedPosition().getY());
+        this.targetCoords = new Translation2d(xTarget - driveBase.getOdometry().getEstimatedPosition().getX(), 
+                                              yTarget - driveBase.getOdometry().getEstimatedPosition().getY());
     }
 
     @Override
