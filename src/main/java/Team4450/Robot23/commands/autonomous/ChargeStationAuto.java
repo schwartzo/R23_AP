@@ -69,11 +69,11 @@ public class ChargeStationAuto extends CommandBase {
         // commands.addCommands(command);
 
         commands.addCommands(new CommandSimplifier(driveBase, arm, winch, claw, new CommandType[] {
-            new CommandType(180),
-            new CommandType(ComboStateNames.HIGHEST_SCORING),
-            new CommandType(null, null, ClawStateNames.FULLY_OPEN),
-            new CommandType(new Translation2d(3.7, 0)),
-            new CommandType(new Translation2d(0, 2.4)),
+            CommandType.rotateRobot(180),
+            CommandType.comboPosition(ComboStateNames.HIGHEST_SCORING),
+            CommandType.manualPosition(null, null, ClawStateNames.FULLY_OPEN),
+            CommandType.moveRobot(3.7, 0),
+            CommandType.moveRobot(0, 2.4),
         }), new AutoBalance(driveBase, -0.5));
 
         commands.schedule();
