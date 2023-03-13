@@ -99,7 +99,7 @@ public class AutoBalance extends CommandBase {
         // it's negative the front of the robot is tilted down which means it needs to
         // move backward, if it spositive the front of the robot is tilted up which
         // means it needs to move forward.
-        speed = (pitch - 180) > 0 ? 1 : -1;
+        speed *= (pitch - 180) > 0 ? 1 : -1;
         driveBase.drive(speed, 0, 0);
 
         while (Math.abs(pitch) > degreeLeeway) {
