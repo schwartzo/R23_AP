@@ -13,7 +13,7 @@ public class AutoBalance extends CommandBase {
 
     private double pitch; // Rotation around x axis
     private double yaw; // Rotation around z axis
-    private double degreeLeeway = 10;
+    private double degreeLeeway = 1;
 
     // A speed that shouldn't ever happen in this, so can be used for checking if we
     // are skipping the rotation part
@@ -57,7 +57,7 @@ public class AutoBalance extends CommandBase {
 
     // USING WHILES BECAUSE WE DONT WANT IT TO CONTINUE UNTIL THAT STAGE IS FINISHED
 
-    public void resetYaw() { // YAW WILL HAVE TO BE CHANGED BECAUSE SWERVE DRIVES DON'T WORK WITH IT
+    public void resetYaw() {
         recalibrateRotation();
         double rotationTarget = 0;
         boolean calculateRotation = false;
@@ -80,7 +80,7 @@ public class AutoBalance extends CommandBase {
 
         // If the robot is facing the ramp move forward, otherwise that means the robot
         // is facing away from the ramp (and is rotated 180 degrees) so move backward
-        balanceRobot((yaw == 0) ? 0.5 : -0.5);
+        balanceRobot((yaw == 0) ? 0.2 : -0.2);
     }
 
     public void balanceRobot(double speed) {
