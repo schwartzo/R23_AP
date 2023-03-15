@@ -244,7 +244,7 @@ public class FieldMap2d
          * @param size Translation from top left corner to bottom right corner of obstacle (assuming 0 degrees rotation).
          * @return A new rectangular PolygonObstacle.
          */
-        public PolygonObstacle rect(Pose2d origin, Translation2d size)
+        public static PolygonObstacle rect(Pose2d origin, Translation2d size)
         {
             return new PolygonObstacle(origin.getTranslation(),
                     new Translation2d(size.getX(), origin.getRotation()),
