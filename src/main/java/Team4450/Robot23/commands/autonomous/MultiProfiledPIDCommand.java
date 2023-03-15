@@ -62,11 +62,21 @@ public class MultiProfiledPIDCommand extends CommandBase
         controllers.put(name, new PID(controller, measurement, goal, output));
     }
 
+    /**
+     * Gets a PID container from the map by name.
+     * @param name The name of the PID.
+     * @return The PID container with the specified name.
+     */
     protected PID getPID(String name)
     {
         return controllers.get(name);
     }
 
+    /**
+     * Creates a state supplier from a double supplier.
+     * @param s Double supplier used to create the state supplier.
+     * @return A state supplier which uses the return value of the double supplier.
+     */
     protected Supplier<State> stateSupplier(Supplier<Double> s)
     {
         return () -> new State(s.get(), 0.0);
