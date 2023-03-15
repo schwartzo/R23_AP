@@ -63,7 +63,7 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
                         new TrapezoidProfile.Constraints(MAX_WHEEL_SPEED, MAX_WHEEL_ACCEL)),
                 // Closed loop on distance via reference so pid controller can call it on each
                 // execute() call.
-                () -> getDistanceTraveled(),
+                driveBase::getDistanceTraveled,
                 // Set target distance.
                 stateSupplier(() -> Math.hypot(distanceX, distanceY)),
                 // Pipe output to drive robot.
@@ -237,7 +237,7 @@ public class AutoCombinedDriveRotateProfiled extends MultiProfiledPIDCommand
         currentRotation = rotation * (RobotBase.isSimulation() ? -1 : 1);
     }
 
-    private double getDistanceTraveled()
+    private double getDisplacement()
     {
         return Math.hypot(startPose.getX() - driveBase.getRobotPose().getX(),
                 startPose.getY() - driveBase.getRobotPose().getY());

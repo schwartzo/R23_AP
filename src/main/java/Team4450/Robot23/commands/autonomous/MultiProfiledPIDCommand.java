@@ -92,7 +92,8 @@ public class MultiProfiledPIDCommand extends CommandBase
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interrupted)
+    {
         for (Map.Entry<String, PID> p : controllers.entrySet())
         {
             p.getValue().output.accept(0.0, new State());
