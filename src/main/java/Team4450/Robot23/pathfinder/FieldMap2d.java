@@ -23,7 +23,7 @@ public class FieldMap2d
      * @param name Name of the obstacle set.
      * @param obstacleSet Obstacle set to add.
      */
-    public void addObstacle(String name, FieldObstacleSet obstacleSet)
+    public void addObstacleSet(String name, FieldObstacleSet obstacleSet)
     {
         obstacles.put(name, obstacleSet);
     }
@@ -297,7 +297,6 @@ public class FieldMap2d
             Translation2d F = D.minus(C);
             Translation2d P = new Translation2d(-E.getY(), E.getX());
             return dot(F, P) == 0 ? 0 : dot((A.minus(C)), P) / dot(F, P);
-
         }
 
         private double dot(Translation2d a, Translation2d b)
