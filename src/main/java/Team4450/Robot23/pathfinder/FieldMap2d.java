@@ -11,9 +11,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
- * Obstacle and path logic.
+ * Obstacle and path logic on a 2d map.
  */
-public class FieldMap
+public class FieldMap2d
 {
 
     private Map<String, FieldObstacleSet> obstacles = new HashMap<>();
@@ -28,6 +28,10 @@ public class FieldMap
         obstacles.put(name, obstacleSet);
     }
 
+    /**
+     * Gets the obstacle map.
+     * @return The map of obstacles used by the field map.
+     */
     public Map<String, FieldObstacleSet> getObstacles()
     {
         return obstacles;
@@ -35,13 +39,13 @@ public class FieldMap
 
     /**
      * Computes a new path which avoids mapped obstacles.
-     * @param start Origin point of the path to modify.
-     * @param end End point of the path to modify.
-     * @return A series of translations (first from the supplied start) which will not intersect any mapped obstacle.
+     * @param original The unmodified path.
+     * @return A path which will not intersect any mapped obstacle.
      */
-    public Path computePath(Path original)
+    public <T extends State2d<T, ?>> Path<T> computePath(Path<T> original)
     {
-        Path path = original;
+        Path<T> path = original;
+        Translation2d prev = original.start();
         for (int i = 0; i < path.size(); i++)
         {
             for (Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
@@ -49,11 +53,12 @@ public class FieldMap
                 if (!obstacleSet.getValue().isEnabled()) continue;
                 for (FieldObstacle obstacle : obstacleSet.getValue().get())
                 {
-                    if (!obstacle.check(new Path.Builder(path.get(i - 1), path.get(i)).build())) continue;
+                    if (!obstacle.check(new Path.Builder<T>(prev, path.get(i)).build())) continue;
                     path.remove(i);
-                    path.addAll(i, obstacle.path(new Path.Builder(path.get(i - 1), path.get(i)).build()));
+                    path.addAll(i, obstacle.path(new Path.Builder<T>(prev, path.get(i)).build()));
                 }
             }
+            prev = path.get(i - 1).translation2d();
         }
         return path;
     }
@@ -80,20 +85,18 @@ public class FieldMap
     {
 
         /**
-         * Creates translations around an obstacle.
-         * @param start Origin point of path which intersects the obstacle.
-         * @param end End point of path which intersects the obstacle.
+         * Creates path around an obstacle.
+         * @param original The unmodified path.
          * @return A series of translations (first from the supplied start) which will not intersect the obstacle.
          */
-        public Path path(Path original);
+        public <T extends State2d<T, ?>> Path<T> path(Path<T> original);
 
         /**
          * Checks if a path intersects the obstacle.
-         * @param start Origin point of path to check.
-         * @param end End point of path to check.
+         * @param path The path to check.
          * @return true if the path intersects the obstacle, false otherwise.
          */
-        public boolean check(Path path);
+        public boolean check(Path<? extends State2d<?, ?>> path);
 
     }
 
@@ -250,27 +253,27 @@ public class FieldMap
         }
 
         @Override
-        public boolean check(Path path)
+        public boolean check(Path<? extends State2d<?, ?>> path)
         {
             Translation2d prev = origin;
             for (Translation2d side : sides)
             {
-                if (range(0, intersection(path.start(), path.get(0), prev, side), 1)) return true;
+                if (range(0, intersection(path.start(), path.get(0).translation2d(), prev, side), 1)) return true;
                 prev = side;
             }
             return false;
         }
 
         @Override
-        public Path path(Path original)
+        public <T extends State2d<T, ?>> Path<T> path(Path<T> original)
         {
-            Path path = original;
+            Path<T> path = original;
             Translation2d prev = origin;
             for (Translation2d side : sides)
             {
-                if (range(0, intersection(path.start(), path.get(0), prev, side), 1))
+                if (range(0, intersection(path.start(), path.get(0).translation2d(), prev, side), 1))
                 {
-                    path.add(intersection(path.start(), path.get(0), prev, side) < 0.5 ? prev : side);
+                    path.add(intersection(path.start(), path.get(0).translation2d(), prev, side) < 0.5 ? path.get(0).copy(prev).get() : path.get(0).copy(side).get());
                     break;
                 }
                 prev = side;
@@ -278,12 +281,12 @@ public class FieldMap
             prev = origin;
             for (int i = 0; i < path.size(); i++)
             {
-                if (check(new Path.Builder(prev, path.get(i)).build()))
+                if (check(new Path.Builder<T>(prev, path.get(i)).build()))
                 {
                     path.remove(i);
-                    path.addAll(i, path(new Path.Builder(prev, path.get(i)).build()));
+                    path.addAll(i, path(new Path.Builder<T>(prev, path.get(i)).build()));
                 }
-                prev = path.get(i);
+                prev = path.get(i).translation2d();
             }
             return path;
         }
