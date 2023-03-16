@@ -37,12 +37,12 @@ public class STranslation2d extends Translation2d implements State2d<STranslatio
     @Override
     public State<STranslation2d, Translation2d> plus(State<STranslation2d, Translation2d> other)
     {
-        return this.plus(other);
+        return new STranslation2d(this.plus(other.base()));
     }
 
     @Override
     public State<STranslation2d, Translation2d> minus(State<STranslation2d, Translation2d> other)
     {
-        return this.minus(other);
+        return new STranslation2d(this.minus(other.base()));
     }
 }

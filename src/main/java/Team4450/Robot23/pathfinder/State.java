@@ -43,11 +43,4 @@ public interface State<T, U>
      */
     public State<T, U> copy();
 
-    /**
-     * Returns another state with X and Y values from a translation.
-     * @param modify The translation to use.
-     * @return A new state instance with X and Y values from the translation.
-     */
-    public State<T, U> copy(Translation2d modify);
-
 }
