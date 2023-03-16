@@ -121,8 +121,8 @@ public class TestingAuto extends CommandBase
 			// new CommandType(ComboStateNames.OBJECT_PICKUP),
 			// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
 		}), new ExecutePathCommand(path));
-
 		
+
 		commands.schedule();
 	}
 	

@@ -1,5 +1,8 @@
 package Team4450.Robot23.commands;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import Team4450.Lib.Util;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoCombinedDriveRotateProfiled;
@@ -150,7 +153,16 @@ public class CommandSimplifier extends CommandBase {
     @Override
     public boolean isFinished()
     {
-        Util.consoleLog(Boolean.toString(seqCmndGroup.isFinished()));
+        try {
+            Class<SequentialCommandGroup> s = (Class<SequentialCommandGroup>)Class.forName("SequentialCommandGroup");
+            Field f = s.getDeclaredField("m_commands");
+            f.setAccessible(true);
+            List<Command> commands = (List<Command>)f.get(seqCmndGroup);
+            Util.consoleLog("List size: " + Integer.toString(commands.size()));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return seqCmndGroup.isFinished();
     }
 
