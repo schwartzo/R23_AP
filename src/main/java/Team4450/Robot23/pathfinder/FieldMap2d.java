@@ -22,10 +22,12 @@ public class FieldMap2d
      * Adds a set of obstacles to the map.
      * @param name Name of the obstacle set.
      * @param obstacleSet Obstacle set to add.
+     * @return The map instance.
      */
-    public void addObstacleSet(String name, FieldObstacleSet obstacleSet)
+    public FieldMap2d addObstacleSet(String name, FieldObstacleSet obstacleSet)
     {
         obstacles.put(name, obstacleSet);
+        return this;
     }
 
     /**
@@ -240,8 +242,8 @@ public class FieldMap2d
 
         /**
          * Instantiates a rectangular PolygonObstacle.
-         * @param origin Pose2d of top left corner of obstacle (assuming a rotation of 0 degrees).
-         * @param size Translation from top left corner to bottom right corner of obstacle (assuming 0 degrees rotation).
+         * @param origin Pose2d of bottom left corner of obstacle (assuming a rotation of 0 degrees).
+         * @param size Translation from bottom left corner to top right corner of obstacle (assuming 0 degrees rotation).
          * @return A new rectangular PolygonObstacle.
          */
         public static PolygonObstacle rect(Pose2d origin, Translation2d size)
