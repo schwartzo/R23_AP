@@ -113,4 +113,10 @@ public class AutoBalance extends CommandBase {
     // THIS IS A PRESS AND RUN ONCE COMMAND, ONCE THE PREVIOUS METHOD IS DONE
     // NOTHING HAPPENS. THIS MEANS I DO NOT MAKE A execute(), end(), AND
     // isFinished()
+
+    @Override
+    public void execute()
+    {
+        Util.consoleLog("executed");
+    }
 }
