@@ -1,7 +1,5 @@
 package Team4450.Robot23.pathfinder;
 
-import edu.wpi.first.math.geometry.Translation2d;
-
 /**
  * State for use with paths.
  * T should be the type of the implementor.

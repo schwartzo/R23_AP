@@ -1,5 +1,6 @@
 package Team4450.Robot23.commands;
 
+import Team4450.Lib.Util;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoCombinedDriveRotateProfiled;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
@@ -144,6 +145,19 @@ public class CommandSimplifier extends CommandBase {
         }
 
         seqCmndGroup.schedule();
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        Util.consoleLog(Boolean.toString(seqCmndGroup.isFinished()));
+        return seqCmndGroup.isFinished();
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+        Util.consoleLog("CommandSimplifier end ----------------------------------------");
     }
 }
 /*

@@ -50,6 +50,8 @@ public class FieldMap2d
         Translation2d prev = original.start();
         for (int i = 0; i < path.size(); i++)
         {
+            if (i > 0)
+                prev = path.get(i - 1).translation2d();
             for (Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
             {
                 if (!obstacleSet.getValue().isEnabled()) continue;
@@ -60,7 +62,6 @@ public class FieldMap2d
                     path.addAll(i, obstacle.path(new Path.Builder<T>(prev, path.get(i)).build()));
                 }
             }
-            prev = path.get(i - 1).translation2d();
         }
         return path;
     }
@@ -172,7 +173,7 @@ public class FieldMap2d
         public static class Builder
         {
             private boolean initallyEnabled;
-            private List<FieldObstacle> obstacles;
+            private List<FieldObstacle> obstacles = new ArrayList<>();
 
             /**
              * Add an obstacle.

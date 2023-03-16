@@ -1,5 +1,6 @@
 package Team4450.Robot23.pathfinder;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -134,7 +135,7 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     public SequentialCommandGroup group()
     {
         SequentialCommandGroup group = new SequentialCommandGroup();
-        for (int i = 0; i < states.size() - 1; i++)
+        for (int i = 0; i < states.size(); i++)
         {
             group.addCommands(command.construct(states.get(i)));
         }
@@ -147,7 +148,7 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     public static class Builder<T extends State<T, ?>>
     {
 
-        private List<T> states;
+        private List<T> states = new ArrayList<>();
         private Translation2d start;
 
         CommandSupplier<T> command;
