@@ -1,9 +1,5 @@
 package Team4450.Robot23.commands;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import Team4450.Lib.Util;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoCombinedDriveRotateProfiled;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
@@ -149,32 +145,6 @@ public class CommandSimplifier extends CommandBase {
 
         seqCmndGroup.schedule();
     }
-
-    // @Override
-    // public boolean isFinished()
-    // {
-    //     try {
-    //         Class<SequentialCommandGroup> s = (Class<SequentialCommandGroup>)Class.forName("edu.wpi.first.wpilibj2.command.SequentialCommandGroup");
-    //         Field f = s.getDeclaredField("m_commands");
-    //         Field f2 = s.getDeclaredField("m_currentCommandIndex");
-    //         f.setAccessible(true);
-    //         f2.setAccessible(true);
-    //         List<Command> commands = (List<Command>)f.get(seqCmndGroup);
-    //         int index = (int)f2.get(seqCmndGroup);
-    //         Util.consoleLog("List size: " + Integer.toString(commands.size()));
-    //         Util.consoleLog("Index: " + Integer.toString(index));
-    //     } catch (Exception e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
-    //     return false;
-    // }
-
-    // @Override
-    // public void end(boolean interrupted)
-    // {
-    //     Util.consoleLog("CommandSimplifier end ----------------------------------------");
-    // }
 }
 /*
  * traj
