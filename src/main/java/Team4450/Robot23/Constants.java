@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import Team4450.Lib.Util;
+import Team4450.Robot23.pathfinder.FieldMap2d;
+import Team4450.Robot23.pathfinder.FieldMap2d.FieldObstacle;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -176,4 +179,10 @@ public final class Constants
 
   //-------------------- No student code above this line ------------------------------------------------------
 
+    public static final FieldMap2d FIELD_MAP = new FieldMap2d()
+            .addObstacleSet("Testing bomb",
+                    new FieldMap2d.FieldObstacleSet.Builder()
+                            .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(569, 92, new Rotation2d()), new Translation2d(120, 366)))
+                            .build()
+    );
 }

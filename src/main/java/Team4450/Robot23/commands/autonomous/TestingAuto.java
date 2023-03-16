@@ -9,6 +9,9 @@ import Team4450.Robot23.commands.AutoPositions.ClawStateNames;
 import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
+import Team4450.Robot23.pathfinder.Path;
+import Team4450.Robot23.pathfinder.STranslation2d;
+import Team4450.Robot23.pathfinder.command.ExecutePathCommand;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -101,14 +104,25 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 
+		Path<STranslation2d> path = new Path.Builder<STranslation2d>(driveBase.getRobotPose().getTranslation(), new STranslation2d(new Translation2d(10, new Rotation2d())))
+				.command((tr) -> AutoDriveDiagonalProfiled.cartes(driveBase, tr.base().getX(), tr.base().getY(), AutoDriveDiagonalProfiled.StopMotors.stop, AutoDriveDiagonalProfiled.Brakes.on, AutoDriveDiagonalProfiled.FieldOriented.on))
+				.build();
+		// commands.addCommands();
+		// commands.addCommands(new ExecutePathCommand(FIELD_MAP.computePath(path)));
+
+		// driveBase.toggleFieldOriented();
+
+		// commands.addCommands(AutoCombinedDriveRotateProfiled.cartes(driveBase, 8, 0, 65, AutoCombinedDriveRotateProfiled.StopMotors.stop, AutoCombinedDriveRotateProfiled.Brakes.on, AutoCombinedDriveRotateProfiled.FieldOriented.off));
+
 		commands.addCommands(new CommandSimplifier(driveBase, arm, winch, claw, new CommandType[] {
 			new CommandType(new Translation2d(1, 2)),
 			new CommandType(new Translation2d(-1, -3)),
 			new CommandType(new Translation2d(0, 1)),
-			new CommandType(ComboStateNames.OBJECT_PICKUP),
-			new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
-		}));
+			// new CommandType(ComboStateNames.OBJECT_PICKUP),
+			// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
+		}), new ExecutePathCommand(path));
 
+		
 		commands.schedule();
 	}
 	
