@@ -223,7 +223,7 @@ public class FieldMap2d
     {
 
         private Translation2d origin;
-        private List<Translation2d> sides;
+        private List<Translation2d> sides = new ArrayList<>();
 
         /**
          * Instantiates a PolygonObstacle. Connection to origin is automatic.
