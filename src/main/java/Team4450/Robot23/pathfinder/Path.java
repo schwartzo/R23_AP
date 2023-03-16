@@ -6,7 +6,8 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Path<T extends State<T, ?>> implements Iterable<T> {
+public class Path<T extends State<T, ?>> implements Iterable<T>
+{
 
     private List<T> states;
     private Translation2d start;
@@ -121,7 +122,8 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<T> iterator()
+    {
         return states.iterator();
     }
     

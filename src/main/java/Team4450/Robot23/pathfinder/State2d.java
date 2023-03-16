@@ -26,4 +26,11 @@ public interface State2d<T, U> extends State<T, U>
         return new Translation2d(getX(), getY());
     }
     
+    /**
+     * Returns another state with X and Y values from a translation.
+     * @param modify The translation to use.
+     * @return A new state instance with X and Y values from the translation.
+     */
+    public State<T, U> copy(Translation2d modify);
+    
 }

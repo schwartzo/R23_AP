@@ -6,7 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
  * State for use with paths.
  * T should be the type of the implementor.
  */
-public interface State<T, U> {
+public interface State<T, U>
+{
     
     /**
      * Gets the base of the state (e.g. a translation or a transform).
@@ -41,12 +42,5 @@ public interface State<T, U> {
      * @return A new state instance which has the same X and Y values.
      */
     public State<T, U> copy();
-
-    /**
-     * Returns another state with X and Y values from a translation.
-     * @param modify The translation to use.
-     * @return A new state instance with X and Y values from the translation.
-     */
-    public State<T, U> copy(Translation2d modify);
 
 }
