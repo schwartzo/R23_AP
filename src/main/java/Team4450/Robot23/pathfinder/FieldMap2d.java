@@ -46,7 +46,7 @@ public class FieldMap2d
      */
     public <T extends State2d<T, ?>> Path<T> computePath(Path<T> original)
     {
-        Path<T> path = original;
+        Path<T> path = new Path<T>(original);
         Translation2d prev = original.start();
         for (int i = 0; i < path.size(); i++)
         {
@@ -270,7 +270,7 @@ public class FieldMap2d
         @Override
         public <T extends State2d<T, ?>> Path<T> path(Path<T> original)
         {
-            Path<T> path = original;
+            Path<T> path = new Path<T>(original);
             Translation2d prev = origin;
             for (Translation2d side : sides)
             {
