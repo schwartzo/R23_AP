@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import Team4450.Robot23.pathfinder.math.Graph;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +19,8 @@ public class FieldMap2d
 {
 
     private Map<String, FieldObstacleSet> obstacles = new HashMap<>();
+
+    private Graph<Vertex2d> visGraph = new Graph<>((a, b) -> checkVisibility(a, b));
 
     /**
      * Adds a set of obstacles to the map.
@@ -37,6 +41,18 @@ public class FieldMap2d
     public Map<String, FieldObstacleSet> getObstacles()
     {
         return obstacles;
+    }
+
+    public boolean checkVisibility(Vertex2d a, Vertex2d b)
+    {
+        for (Map.Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
+        {
+            if (!obstacleSet.getValue().isEnabled()) continue;
+            for (FieldObstacle obstacle : obstacleSet.getValue().get())
+            {
+                
+            }
+        }
     }
 
     /**
