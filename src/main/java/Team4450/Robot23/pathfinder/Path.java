@@ -129,17 +129,15 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     }
     
     /**
-     * Constructs a sequential command group from the path.
-     * @return Instance of SequentialCommandGroup with path's states and rotation.
+     * Adds commands for path execution to a sequential command group.
+     * @param group The command group to use.
      */
-    public SequentialCommandGroup group()
+    public void group(SequentialCommandGroup group)
     {
-        SequentialCommandGroup group = new SequentialCommandGroup();
         for (int i = 0; i < states.size(); i++)
         {
             group.addCommands(command.construct(states.get(i)));
         }
-        return group;
     }
 
     /**
