@@ -1,5 +1,6 @@
 package Team4450.Robot23.pathfinder;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,12 +29,28 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     }
 
     /**
+     * Constructs a new path from another path.
+     * @param original Path to copy from.
+     */
+    public Path(Path<T> original)
+    {
+        this.states = new ArrayList<T>(original.states);
+        this.start = original.start;
+        this.command = original.command;
+    }
+
+    /**
      * Gets the starting position of the path.
      * @return Starting position of the path.
      */
     public Translation2d start()
     {
         return start;
+    }
+
+    public List<T> states()
+    {
+        return states;
     }
 
     /**
@@ -147,7 +164,7 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     public static class Builder<T extends State<T, ?>>
     {
 
-        private List<T> states;
+        private List<T> states = new ArrayList<>();
         private Translation2d start;
 
         CommandSupplier<T> command;
