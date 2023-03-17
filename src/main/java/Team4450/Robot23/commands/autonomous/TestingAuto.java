@@ -116,7 +116,7 @@ public class TestingAuto extends CommandBase
 			// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
 		});
 		
-		PathExecutor p = new PathExecutor(path);
+		PathExecutor p = new PathExecutor(FIELD_MAP.computePath(path));
 		p.get(commands);
 
 		commands.schedule();
