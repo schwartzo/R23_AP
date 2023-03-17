@@ -10,8 +10,8 @@ import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.pathfinder.Path;
+import Team4450.Robot23.pathfinder.PathExecutor;
 import Team4450.Robot23.pathfinder.STranslation2d;
-import Team4450.Robot23.pathfinder.command.ExecutePathCommand;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -116,7 +116,8 @@ public class TestingAuto extends CommandBase
 			new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
 		});
 		
-		commands.addCommands(new ExecutePathCommand(path));
+		PathExecutor p = new PathExecutor(path);
+		p.get(commands);
 
 		commands.schedule();
 	}
