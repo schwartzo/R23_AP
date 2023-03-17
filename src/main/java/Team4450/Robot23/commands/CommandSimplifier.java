@@ -1,6 +1,5 @@
 package Team4450.Robot23.commands;
 
-import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.commands.autonomous.AutoCombinedDriveRotateProfiled;
 import Team4450.Robot23.commands.autonomous.AutoDriveDiagonalProfiled;
 import Team4450.Robot23.commands.autonomous.AutoRotate;
@@ -12,25 +11,44 @@ import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
 import Team4450.Robot23.subsystems.Winch;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class CommandSimplifier extends CommandBase {
-    DriveBase driveBase;
-    Arm arm;
-    Winch winch;
-    Claw claw;
+public class CommandSimplifier {
 
-    SequentialCommandGroup seqCmndGroup;
-    CommandType[] commandTypes;
+    public static void simplify(SequentialCommandGroup commands, DriveBase driveBase, Arm arm, Winch winch, Claw claw, CommandType... commandTypes) {
 
-    public CommandSimplifier(DriveBase driveBase, Arm arm, Winch winch, Claw claw, CommandType... commandTypes) {
-        this.driveBase = driveBase;
-        this.arm = arm;
-        this.winch = winch;
-        this.claw = claw;
-        this.commandTypes = commandTypes;
+        for (CommandType command : commandTypes) {
+            switch(command.type) {
+                case AutoDriveDiagonalProfiled:
+                    commands.addCommands(AutoDriveDiagonalProfiled.cartes(driveBase, 
+                                                                                command.coordinates.getX(), 
+                                                                                command.coordinates.getY(), 
+                                                                                StopMotors.stop, Brakes.on, 
+                                                                                FieldOriented.on));
+                    break;
+
+                case Rotate:
+                    commands.addCommands(new AutoRotate(driveBase, command.rotation));
+                    break;
+
+                case AutoCombinedDriveRotateProfiled:
+                    commands.addCommands(AutoCombinedDriveRotateProfiled.cartes(driveBase, 
+                                                                                    command.coordinates.getX(), 
+                                                                                    command.coordinates.getY(), 
+                                                                                    command.rotation, 
+                                                                                    AutoCombinedDriveRotateProfiled.StopMotors.stop, 
+                                                                                    AutoCombinedDriveRotateProfiled.Brakes.on, 
+                                                                                    AutoCombinedDriveRotateProfiled.FieldOriented.on));
+
+                case AutoPositionsCombo:
+                    commands.addCommands(new AutoPositions(arm, winch, claw, command.comboState));
+                    break;
+
+                case AutoPositionsManual:
+                    commands.addCommands(new AutoPositions(arm, winch, claw, command.armState, command.winchState, command.clawState));
+                    break;
+            }
+        }
     }
 
     public static class CommandType {
@@ -105,46 +123,7 @@ public class CommandSimplifier extends CommandBase {
                                                  AutoPositions.ClawStateNames clawState) {
             return new CommandType(armState, winchState, clawState);
         }
-    }
-
-    public void initialize() {
-        seqCmndGroup = new SequentialCommandGroup();
-        
-        for (CommandType command : commandTypes) {
-            switch(command.type) {
-                case AutoDriveDiagonalProfiled:
-                    seqCmndGroup.addCommands(AutoDriveDiagonalProfiled.cartes(driveBase, 
-                                                                                command.coordinates.getX(), 
-                                                                                command.coordinates.getY(), 
-                                                                                StopMotors.stop, Brakes.on, 
-                                                                                FieldOriented.on));
-                    break;
-
-                case Rotate:
-                    seqCmndGroup.addCommands(new AutoRotate(driveBase, command.rotation));
-                    break;
-
-                case AutoCombinedDriveRotateProfiled:
-                    seqCmndGroup.addCommands(AutoCombinedDriveRotateProfiled.cartes(driveBase, 
-                                                                                    command.coordinates.getX(), 
-                                                                                    command.coordinates.getY(), 
-                                                                                    command.rotation, 
-                                                                                    AutoCombinedDriveRotateProfiled.StopMotors.stop, 
-                                                                                    AutoCombinedDriveRotateProfiled.Brakes.on, 
-                                                                                    AutoCombinedDriveRotateProfiled.FieldOriented.on));
-
-                case AutoPositionsCombo:
-                    seqCmndGroup.addCommands(new AutoPositions(arm, winch, claw, command.comboState));
-                    break;
-
-                case AutoPositionsManual:
-                    seqCmndGroup.addCommands(new AutoPositions(arm, winch, claw, command.armState, command.winchState, command.clawState));
-                    break;
-            }
-        }
-
-        seqCmndGroup.schedule();
-    }
+    }        
 }
 /*
  * traj
