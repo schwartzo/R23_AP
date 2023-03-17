@@ -112,8 +112,8 @@ public class TestingAuto extends CommandBase
 			new CommandType(new Translation2d(1, 2)),
 			new CommandType(new Translation2d(-1, -3)),
 			new CommandType(new Translation2d(0, 1)),
-			new CommandType(ComboStateNames.OBJECT_PICKUP),
-			new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
+			// new CommandType(ComboStateNames.OBJECT_PICKUP),
+			// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
 		});
 		
 		PathExecutor p = new PathExecutor(path);
