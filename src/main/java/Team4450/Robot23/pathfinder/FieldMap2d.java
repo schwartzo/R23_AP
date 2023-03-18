@@ -111,7 +111,7 @@ public class FieldMap2d
         {
             for (Vertex2d v : p.find(start, point.getValue()))
             {
-                builder.add(point.getKey().copy(v));
+                builder.add(point.getKey().copy(v.minus(start)));
             }
             start = point.getValue();
         }
