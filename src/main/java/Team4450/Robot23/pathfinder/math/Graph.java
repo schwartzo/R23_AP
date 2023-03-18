@@ -31,8 +31,9 @@ public class Graph<V extends Vertex<V>>
 
     /**
      * Updates the list of vertices and their neighbor lists.
+     * @param refreshVertices Gets a new list of vertices if true.
      */
-    public void update()
+    public void update(boolean refreshVertices)
     {
         vertices = vertexSupplier.get();
         for (V a : vertices)
