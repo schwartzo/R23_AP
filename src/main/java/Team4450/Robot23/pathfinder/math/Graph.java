@@ -35,7 +35,8 @@ public class Graph<V extends Vertex<V>>
      */
     public void update(boolean refreshVertices)
     {
-        vertices = vertexSupplier.get();
+        if (refreshVertices)
+            vertices = vertexSupplier.get();
         for (V a : vertices)
         {
             a.clearNeighbors();
