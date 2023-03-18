@@ -10,9 +10,8 @@ import Team4450.Robot23.commands.AutoPositions.ComboStateNames;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType;
 import Team4450.Robot23.commands.CommandSimplifier.CommandType.commandType;
 import Team4450.Robot23.pathfinder.Path;
-import Team4450.Robot23.pathfinder.PathExecutor;
-import Team4450.Robot23.pathfinder.STranslation2d;
 import Team4450.Robot23.pathfinder.StateTranslation2d;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import Team4450.Robot23.subsystems.Arm;
 import Team4450.Robot23.subsystems.Claw;
 import Team4450.Robot23.subsystems.DriveBase;
@@ -105,7 +104,7 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 
-		Path<StateTranslation2d> path = new Path.Builder<StateTranslation2d>(driveBase.getRobotPose().getTranslation(), new StateTranslation2d(new Translation2d(10, 0)))
+		Path<StateTranslation2d> path = new Path.Builder<StateTranslation2d>(new Vertex2d(driveBase.getRobotPose().getX(), driveBase.getRobotPose().getY()), new StateTranslation2d(new Translation2d(10, 0)))
 				.command((tr) -> AutoDriveDiagonalProfiled.cartes(driveBase, tr.getX(), tr.getY(), AutoDriveDiagonalProfiled.StopMotors.stop, AutoDriveDiagonalProfiled.Brakes.on, AutoDriveDiagonalProfiled.FieldOriented.on))
 				.build();
 
