@@ -116,7 +116,7 @@ public class FieldMap2d
             start = point.getValue();
         }
         visGraph.popState();
-        return builder.build();
+        return builder.remove(0).build();
     }
 
     public boolean isObstacleSetEnabled(String name)
