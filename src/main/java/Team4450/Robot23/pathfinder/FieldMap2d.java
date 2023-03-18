@@ -323,25 +323,29 @@ public class FieldMap2d
         @Override
         public boolean check(Path<? extends State2d<?>> path)
         {
+            int vcon = 0;
             Vertex2d prev = vertices.get(0);
             for (Vertex2d v : vertices)
             {
-                if (range(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) return true;
+                if (erange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) return true;
+                if (irange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) vcon++;
                 prev = v;
             }
-            return false;
+            return vcon > 2 ? true : false;
         }
 
         @Override
         public boolean check(Vertex2d a, Vertex2d b)
         {
+            int vcon = 0;
             Vertex2d prev = vertices.get(0);
             for (Vertex2d v : vertices)
             {
-                if (range(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
+                if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
+                if (irange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) vcon++;
                 prev = v;
             }
-            return false;
+            return vcon > 2 ? true : false;
         }
 
         private double intersection(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
@@ -352,9 +356,14 @@ public class FieldMap2d
             return F.dot(P) == 0 ? 0 : A.minus(C).dot(P) / F.dot(P);
         }
 
-        private boolean range(double min, double x, double max)
+        private boolean erange(double min, double x, double max)
         {
             return x > min && x < max ? true : false;
+        }
+
+        private boolean irange(double min, double x, double max)
+        {
+            return x >= min && x <= max ? true : false;
         }
     }
 }
