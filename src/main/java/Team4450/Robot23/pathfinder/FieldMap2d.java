@@ -104,6 +104,7 @@ public class FieldMap2d
                     (prev == null ? original.start().getY() : prev.getY()) + state.getY());
             visGraph.addVertex(v);
             points.put(state, v);
+            prev = state;
         }
         visGraph.update(false);
         for (Map.Entry<T, Vertex2d> point : points.entrySet())
