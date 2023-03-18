@@ -236,6 +236,17 @@ public class Path<T extends State<T>> implements Iterable<T>
         }
 
         /**
+         * Removes a state from the path.
+         * @param i Index of state to remove.
+         * @return Updated builder instance.
+         */
+        public Builder<T> remove(int i)
+        {
+            states.remove(i);
+            return this;
+        }
+
+        /**
          * Constructs the path instance.
          * @return A new path instance with specified parameters.
          */
