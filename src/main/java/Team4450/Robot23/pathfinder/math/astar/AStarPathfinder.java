@@ -11,6 +11,9 @@ import Team4450.Robot23.pathfinder.math.Graph;
 import Team4450.Robot23.pathfinder.math.Pathfinder;
 import Team4450.Robot23.pathfinder.math.Vertex;
 
+/**
+ * A* pathfinder implementation.
+ */
 public class AStarPathfinder<V extends Vertex<V>> implements Pathfinder<V>
 {
     
@@ -18,6 +21,12 @@ public class AStarPathfinder<V extends Vertex<V>> implements Pathfinder<V>
     private final Scorer<V> vertexScorer;
     private final Scorer<V> targetScorer;
 
+    /**
+     * Instantiates an A* pathfinder.
+     * @param graph Graph to use for pathfinding.
+     * @param vertexScorer Vertex connection scorer.
+     * @param targetScorer Path scorer.
+     */
     public AStarPathfinder(Graph<V> graph, Scorer<V> vertexScorer, Scorer<V> targetScorer) {
         this.graph = graph;
         this.vertexScorer = vertexScorer;

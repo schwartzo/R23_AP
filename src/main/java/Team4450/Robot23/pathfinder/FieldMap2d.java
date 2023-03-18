@@ -9,7 +9,7 @@ import Team4450.Robot23.pathfinder.math.Graph;
 import Team4450.Robot23.pathfinder.math.Pathfinder;
 import Team4450.Robot23.pathfinder.math.Vertex2d;
 import Team4450.Robot23.pathfinder.math.astar.AStarPathfinder;
-import Team4450.Robot23.pathfinder.math.astar.EuclidianDistanceScorer;
+import Team4450.Robot23.pathfinder.math.astar.EuclideanDistanceScorer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -91,7 +91,7 @@ public class FieldMap2d
     {
         Vertex2d start = original.start();
         Map<T, Vertex2d> points = new HashMap<>();
-        Pathfinder<Vertex2d> p = new AStarPathfinder<>(visGraph, new EuclidianDistanceScorer<Vertex2d>(), new EuclidianDistanceScorer<Vertex2d>());
+        Pathfinder<Vertex2d> p = new AStarPathfinder<>(visGraph, new EuclideanDistanceScorer<Vertex2d>(), new EuclideanDistanceScorer<Vertex2d>());
         Path.Builder<T> builder = new Path.Builder<T>(start, null).blankFrom(original);
 
         visGraph.pushState();
@@ -302,9 +302,9 @@ public class FieldMap2d
         public static PolygonObstacle rect(Pose2d origin, double x, double y)
         {
             Vertex2d v = new Vertex2d(origin.getTranslation().getX(), origin.getTranslation().getY());
-            return new PolygonObstacle(v, v.polar(x, origin.getRotation().getRadians()),
-                    v.polar(x, Rotation2d.fromDegrees(90).minus(origin.getRotation()).getRadians()),
-                    v.polar(x, Rotation2d.fromDegrees(180).plus(origin.getRotation()).getRadians()));
+            return new PolygonObstacle(v, v.polarOffset(x, origin.getRotation().getRadians()),
+                    v.polarOffset(x, Rotation2d.fromDegrees(90).minus(origin.getRotation()).getRadians()),
+                    v.polarOffset(x, Rotation2d.fromDegrees(180).plus(origin.getRotation()).getRadians()));
         }
 
         @Override

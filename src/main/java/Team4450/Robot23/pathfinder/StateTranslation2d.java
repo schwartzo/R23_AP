@@ -3,9 +3,16 @@ package Team4450.Robot23.pathfinder;
 import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
+/**
+ * Translation2d wrapper which can be used as a state in a path.
+ */
 public class StateTranslation2d extends Translation2d implements State2d<StateTranslation2d>
 {
 
+    /**
+     * Instantiates a Translation2d state from a Translation2d.
+     * @param other The translation to use for initialization.
+     */
     public StateTranslation2d(Translation2d other)
     {
         super(other.getX(), other.getY());
