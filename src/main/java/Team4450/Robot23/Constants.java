@@ -183,6 +183,7 @@ public final class Constants
             .addObstacleSet("Testing bomb",
                     new FieldMap2d.FieldObstacleSet.Builder()
                             .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(5.69, 0.92, new Rotation2d()), 1.20, 3.66))
+                            .enabled()
                             .build()
     );
 }
