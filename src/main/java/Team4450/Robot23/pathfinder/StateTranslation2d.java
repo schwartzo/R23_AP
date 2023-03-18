@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class StateTranslation2d extends Translation2d implements State2d<StateTranslation2d>
 {
 
-    private StateTranslation2d(Translation2d other)
+    public StateTranslation2d(Translation2d other)
     {
         super(other.getX(), other.getY());
     }
