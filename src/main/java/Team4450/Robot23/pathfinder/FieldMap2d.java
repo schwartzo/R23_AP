@@ -76,7 +76,7 @@ public class FieldMap2d
             if (!obstacleSet.getValue().isEnabled()) continue;
             for (FieldObstacle obstacle : obstacleSet.getValue().get())
             {
-                obstacle.putVertices(vertices);;
+                obstacle.putVertices(vertices);
             }
         }
         return vertices;
