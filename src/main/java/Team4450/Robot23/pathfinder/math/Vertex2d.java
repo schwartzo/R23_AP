@@ -57,7 +57,7 @@ public class Vertex2d extends Vertex<Vertex2d>
     @Override
     public Vertex2d minus(Vertex2d other)
     {
-        return new Vertex2d(x + other.getX(), y + other.getY());
+        return new Vertex2d(x - other.getX(), y - other.getY());
     }
 
     @Override
