@@ -3,12 +3,12 @@ package Team4450.Robot23.pathfinder.math;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex
+public abstract class Vertex<V extends Vertex<V>>
 {
     
-    private List<Vertex> neighbors = new ArrayList<>();
+    private List<V> neighbors = new ArrayList<>();
 
-    public void addNeighbor(Vertex v)
+    public void addNeighbor(V v)
     {
         neighbors.add(v);
     }
@@ -18,8 +18,16 @@ public class Vertex
         neighbors.clear();
     }
 
-    public List<Vertex> getNeighbors()
+    public List<V> getNeighbors()
     {
         return neighbors;
     }
+
+    public abstract V plus(V other);
+
+    public abstract V minus(V other);
+
+    public abstract double dot(V other);
+
+    public abstract double distance(V other);
 }
