@@ -96,9 +96,12 @@ public class FieldMap2d
 
         visGraph.pushState();
         visGraph.addVertex(start);
+        T prev = null;
         for (T state : original)
         {
-            Vertex2d v = new Vertex2d(state.getX(), state.getY());
+            Vertex2d v = new Vertex2d(
+                    (prev == null ? original.start().getX() : prev.getX()) + state.getX(),
+                    (prev == null ? original.start().getY() : prev.getY()) + state.getY());
             visGraph.addVertex(v);
             points.put(state, v);
         }
