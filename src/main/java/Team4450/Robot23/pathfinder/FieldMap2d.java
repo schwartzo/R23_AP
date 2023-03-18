@@ -32,7 +32,7 @@ public class FieldMap2d
     public FieldMap2d addObstacleSet(String name, FieldObstacleSet obstacleSet)
     {
         obstacles.put(name, obstacleSet);
-        visGraph.update(false);
+        visGraph.update(true);
         return this;
     }
 
@@ -111,6 +111,7 @@ public class FieldMap2d
             }
             start = point.getValue();
         }
+        visGraph.popState();
         return builder.build();
     }
 
@@ -122,13 +123,13 @@ public class FieldMap2d
     public void setObstacleSetEnabled(String name, boolean enabled)
     {
         obstacles.get(name).setEnabled(enabled);
-        visGraph.update(false);
+        visGraph.update(true);
     }
 
     public void toggleObstacleSet(String name)
     {
         obstacles.get(name).toggle();
-        visGraph.update(false);
+        visGraph.update(true);
     }
 
     /**
