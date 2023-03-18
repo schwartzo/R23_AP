@@ -62,7 +62,9 @@ public class Graph<V extends Vertex<V>>
      */
     public List<V> getVertexConnections(V v)
     {
-        return vertices.get(vertices.indexOf(v)).getNeighbors();
+        if (vertices.contains(v))
+            return vertices.get(vertices.indexOf(v)).getNeighbors();
+        return new ArrayList<V>();
     }
 
     /**
