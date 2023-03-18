@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Path<T extends State<T, ?>> implements Iterable<T>
+public class Path<T extends State<T>> implements Iterable<T>
 {
 
     private List<T> states;
-    private Translation2d start;
+    private Vertex2d start;
 
     private CommandSupplier<T> command;
 
@@ -21,7 +21,7 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
      * @param start Start position.
      * @param states List of states to execute.
      */
-    public Path(CommandSupplier<T> command, Translation2d start, List<T> states)
+    public Path(CommandSupplier<T> command, Vertex2d start, List<T> states)
     {
         this.command = command;
         this.states = states;
@@ -43,14 +43,27 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
      * Gets the starting position of the path.
      * @return Starting position of the path.
      */
-    public Translation2d start()
+    public Vertex2d start()
     {
         return start;
     }
 
+    /**
+     * Gets the list of states used by the path.
+     * @return The list of states used by the path.
+     */
     public List<T> states()
     {
         return states;
+    }
+
+    /**
+     * Gets the command supplier.
+     * @return The command supplier.
+     */
+    public CommandSupplier<T> command()
+    {
+        return command;
     }
 
     /**
@@ -159,11 +172,11 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
     /**
      * Builder class for paths.
      */
-    public static class Builder<T extends State<T, ?>>
+    public static class Builder<T extends State<T>>
     {
 
         private List<T> states = new ArrayList<>();
-        private Translation2d start;
+        private Vertex2d start;
 
         CommandSupplier<T> command;
 
@@ -172,10 +185,21 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
          * @param start Beginning of path.
          * @param end First state.
          */
-        public Builder(Translation2d start, T end)
+        public Builder(Vertex2d start, T end)
         {
             this.start = start;
-            this.states.add(end);
+            if (end != null)
+                this.states.add(end);
+        }
+        
+        /**
+         * Copies non-state parameters from another path. Only command as of now.
+         * @param original The path to copy from.
+         * @return Updated builder instance.
+         */
+        public Builder<T> blankFrom(Path<T> original)
+        {
+            return this.command(original.command());
         }
 
         /**
@@ -197,6 +221,17 @@ public class Path<T extends State<T, ?>> implements Iterable<T>
         public Builder<T> add(T point)
         {
             states.add(point);
+            return this;
+        }
+
+        /**
+         * Adds a list of states to the path.
+         * @param points States to add.
+         * @return Updated builder instance.
+         */
+        public Builder<T> add(List<T> points)
+        {
+            states.addAll(points);
             return this;
         }
 
