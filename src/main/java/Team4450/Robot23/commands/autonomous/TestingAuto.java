@@ -104,8 +104,13 @@ public class TestingAuto extends CommandBase
 		
 		commands = new SequentialCommandGroup();
 
-		Path<StateTranslation2d> path = new Path.Builder<StateTranslation2d>(new Vertex2d(driveBase.getRobotPose().getX(), driveBase.getRobotPose().getY()), new StateTranslation2d(new Translation2d(10, 0)))
-				.command((tr) -> AutoDriveDiagonalProfiled.cartes(driveBase, tr.getX(), tr.getY(), AutoDriveDiagonalProfiled.StopMotors.stop, AutoDriveDiagonalProfiled.Brakes.on, AutoDriveDiagonalProfiled.FieldOriented.on))
+		Path<StateTranslation2d> path = new Path.Builder<StateTranslation2d>(
+				new Vertex2d(
+					driveBase.getRobotPose().getX(),
+					driveBase.getRobotPose().getY()),
+				new StateTranslation2d(new Translation2d(10, 0)))
+				.command(
+					(tr) -> AutoDriveDiagonalProfiled.cartes(driveBase, tr.getX(), tr.getY(), AutoDriveDiagonalProfiled.StopMotors.stop, AutoDriveDiagonalProfiled.Brakes.on, AutoDriveDiagonalProfiled.FieldOriented.on))
 				.build();
 
 		FIELD_MAP.computePath(path).group(commands);
