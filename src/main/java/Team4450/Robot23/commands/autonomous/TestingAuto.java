@@ -110,13 +110,13 @@ public class TestingAuto extends CommandBase
 
 		FIELD_MAP.computePath(path).group(commands);
 
-		CommandSimplifier.simplify(commands, driveBase, arm, winch, claw, new CommandType[] {
-			new CommandType(new Translation2d(1, 2)),
-			new CommandType(new Translation2d(-1, -3)),
-			new CommandType(new Translation2d(0, 1)),
-			// new CommandType(ComboStateNames.OBJECT_PICKUP),
-			// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
-		});
+		// CommandSimplifier.simplify(commands, driveBase, arm, winch, claw, new CommandType[] {
+		// 	new CommandType(new Translation2d(1, 2)),
+		// 	new CommandType(new Translation2d(-1, -3)),
+		// 	new CommandType(new Translation2d(0, 1)),
+		// 	// new CommandType(ComboStateNames.OBJECT_PICKUP),
+		// 	// new CommandType(null, null, ClawStateNames.HOLDING_CUBE)
+		// });
 
 		commands.schedule();
 	}
