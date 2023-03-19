@@ -42,7 +42,7 @@ public class Graph<V extends Vertex<V>>
             a.clearNeighbors();
             for (V b : vertices)
             {
-                if (visibilitySupplier.check(a, b))
+                if (a != b && visibilitySupplier.check(a, b))
                     a.addNeighbor(b);
             }
         }
