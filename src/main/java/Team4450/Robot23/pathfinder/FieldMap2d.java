@@ -110,7 +110,8 @@ public class FieldMap2d
         visGraph.update(false);
         for (Map.Entry<T, Vertex2d> point : points.entrySet())
         {
-            for (Vertex2d v : p.find(start, point.getValue()))
+            List<Vertex2d> path = p.find(start, point.getValue());
+            for (Vertex2d v : path)
             {
                 builder.add(point.getKey().copy(v.minus(start)));
             }
