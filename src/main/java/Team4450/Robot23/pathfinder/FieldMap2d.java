@@ -324,7 +324,7 @@ public class FieldMap2d
         public boolean check(Path<? extends State2d<?>> path)
         {
             int vcon = 0;
-            Vertex2d prev = vertices.get(0);
+            Vertex2d prev = vertices.get(vertices.size() - 1);
             for (Vertex2d v : vertices)
             {
                 if (erange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) return true;
@@ -339,7 +339,7 @@ public class FieldMap2d
         public boolean check(Vertex2d a, Vertex2d b)
         {
             int vcon = 0;
-            Vertex2d prev = vertices.get(0);
+            Vertex2d prev = vertices.get(vertices.size() - 1);
             for (Vertex2d v : vertices)
             {
                 if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
