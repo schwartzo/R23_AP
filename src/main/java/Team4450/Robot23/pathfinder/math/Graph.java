@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Supplier;
 
+import Team4450.Lib.Util;
+
 /**
  * A directed graph.
  */
@@ -43,7 +45,11 @@ public class Graph<V extends Vertex<V>>
             for (V b : vertices)
             {
                 if (a != b && visibilitySupplier.check(a, b))
+                {
                     a.addNeighbor(b);
+                    Util.consoleLog(a.toString() + " IS visible to " + b.toString());
+                }
+                else Util.consoleLog(a.toString() + " IS NOT visible to " + b.toString());
             }
         }
     }
