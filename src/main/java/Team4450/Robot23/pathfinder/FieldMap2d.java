@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import Team4450.Robot23.pathfinder.math.Graph;
+import Team4450.Robot23.pathfinder.math.MathConstants;
 import Team4450.Robot23.pathfinder.math.Pathfinder;
 import Team4450.Robot23.pathfinder.math.Vertex2d;
 import Team4450.Robot23.pathfinder.math.astar.AStarPathfinder;
@@ -367,12 +368,12 @@ public class FieldMap2d
 
         private boolean erange(double min, double x, double max)
         {
-            return x > min && x < max;
+            return (x > min + MathConstants.EPSILON || x > min - MathConstants.EPSILON) && (x < max + MathConstants.EPSILON || x < max - MathConstants.EPSILON);
         }
 
         private boolean irange(double min, double x, double max)
         {
-            return x >= min && x <= max;
+            return (x >= min + MathConstants.EPSILON || x >= min - MathConstants.EPSILON) && (x <= max + MathConstants.EPSILON || x <= max - MathConstants.EPSILON);
         }
     }
 }
