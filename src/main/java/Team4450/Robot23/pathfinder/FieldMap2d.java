@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Team4450.Lib.Util;
 import Team4450.Robot23.pathfinder.math.Graph;
 import Team4450.Robot23.pathfinder.math.Pathfinder;
 import Team4450.Robot23.pathfinder.math.Vertex2d;
@@ -53,6 +54,7 @@ public class FieldMap2d
      */
     public boolean checkVisibility(Vertex2d a, Vertex2d b)
     {
+        Util.consoleLog("Checking " + a.getX() + "," + a.getY() + " to " + b.getX() + "," + b.getY());
         for (Map.Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
         {
             if (!obstacleSet.getValue().isEnabled()) continue;
@@ -342,7 +344,11 @@ public class FieldMap2d
             Vertex2d prev = vertices.get(vertices.size() - 1);
             for (Vertex2d v : vertices)
             {
-                if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
+                if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1))
+                {
+                    Util.consoleLog("Blocking " + v.getX() + "," + v.getY() + " [" + intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) + "]");
+                    return true;
+                }
                 if (irange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) vcon++;
                 if (intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) == Double.NaN) vcon--;
                 prev = v;
