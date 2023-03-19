@@ -343,9 +343,10 @@ public class FieldMap2d
             {
                 if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
                 if (irange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) vcon++;
+                if (intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) == Double.NaN) vcon -= 2;
                 prev = v;
             }
-            return vcon > 2 ? true : false;
+            return vcon > 2;
         }
 
         private double intersection(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
@@ -353,17 +354,17 @@ public class FieldMap2d
             Vertex2d E = A.minus(B);
             Vertex2d F = D.minus(C);
             Vertex2d P = new Vertex2d(-E.getY(), E.getX());
-            return F.dot(P) == 0 ? 0 : A.minus(C).dot(P) / F.dot(P);
+            return F.dot(P) == 0 ? Double.NaN : A.minus(C).dot(P) / F.dot(P);
         }
 
         private boolean erange(double min, double x, double max)
         {
-            return x > min && x < max ? true : false;
+            return x > min && x < max;
         }
 
         private boolean irange(double min, double x, double max)
         {
-            return x >= min && x <= max ? true : false;
+            return x >= min && x <= max;
         }
     }
 }
