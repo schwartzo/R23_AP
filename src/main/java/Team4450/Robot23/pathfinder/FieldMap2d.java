@@ -368,12 +368,14 @@ public class FieldMap2d
 
         private boolean erange(double min, double x, double max)
         {
-            return (x > min + MathConstants.EPSILON || x > min - MathConstants.EPSILON) && (x < max + MathConstants.EPSILON || x < max - MathConstants.EPSILON);
+            if (Math.abs(max - x) <= MathConstants.EPSILON || Math.abs(min - x) <= MathConstants.EPSILON) return false;
+            return x > min && x < max;
         }
 
         private boolean irange(double min, double x, double max)
         {
-            return (x >= min + MathConstants.EPSILON || x >= min - MathConstants.EPSILON) && (x <= max + MathConstants.EPSILON || x <= max - MathConstants.EPSILON);
+            if (Math.abs(max - x) <= MathConstants.EPSILON || Math.abs(min - x) <= MathConstants.EPSILON) return true;
+            return x >= min && x <= max;
         }
     }
 }
