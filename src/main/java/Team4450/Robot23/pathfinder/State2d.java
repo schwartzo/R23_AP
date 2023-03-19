@@ -28,7 +28,8 @@ public interface State2d<T> extends State<T>
     }
 
     @Override
-    default Vertex2d vertex() {
+    default Vertex2d vertex()
+    {
         return new Vertex2d(getX(), getY());
     }
 
