@@ -352,7 +352,14 @@ public class FieldMap2d
 
         private double intersection(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
         {
-            Vertex2d E = A.minus(B);
+            double[] h = {h(A, B, C, D), h(C, D, A, B)};
+            if (irange(0, h[0], 1) && irange(0, h[1], 1)) return h[0];
+            return Math.abs(h[0]) > Math.abs(h[1]) ? h[0] : h[1];
+        }
+
+        private double h(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
+        {
+            Vertex2d E = B.minus(A);
             Vertex2d F = D.minus(C);
             Vertex2d P = new Vertex2d(-E.getY(), E.getX());
             return F.dot(P) == 0 ? Double.NaN : A.minus(C).dot(P) / F.dot(P);
