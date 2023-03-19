@@ -310,8 +310,8 @@ public class FieldMap2d
         {
             Vertex2d v = new Vertex2d(origin.getTranslation().getX(), origin.getTranslation().getY());
             return new PolygonObstacle(v, v.polarOffset(x, origin.getRotation().getRadians()),
-                    v.polarOffset(x, Rotation2d.fromDegrees(90).minus(origin.getRotation()).getRadians()),
-                    v.polarOffset(x, Rotation2d.fromDegrees(180).plus(origin.getRotation()).getRadians()));
+                    v.polarOffset(Math.hypot(x, y), Rotation2d.fromDegrees(Math.atan(y / x)).plus(origin.getRotation()).getRadians()),
+                    v.polarOffset(y, Rotation2d.fromDegrees(90).plus(origin.getRotation()).getRadians()));
         }
 
         @Override
