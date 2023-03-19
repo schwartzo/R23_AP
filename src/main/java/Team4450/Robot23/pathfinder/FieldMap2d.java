@@ -329,9 +329,10 @@ public class FieldMap2d
             {
                 if (erange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) return true;
                 if (irange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) vcon++;
+                if (intersection(path.start(), path.get(0).vertex(), prev, v) == Double.NaN) vcon--;
                 prev = v;
             }
-            return vcon > 2 ? true : false;
+            return vcon > 2;
         }
 
         @Override
