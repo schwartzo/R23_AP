@@ -343,7 +343,7 @@ public class FieldMap2d
             {
                 if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
                 if (irange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) vcon++;
-                if (intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) == Double.NaN) vcon -= 2;
+                if (intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) == Double.NaN) vcon--;
                 prev = v;
             }
             return vcon > 2;
