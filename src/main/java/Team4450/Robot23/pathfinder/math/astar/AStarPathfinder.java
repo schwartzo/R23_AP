@@ -27,14 +27,16 @@ public class AStarPathfinder<V extends Vertex<V>> implements Pathfinder<V>
      * @param vertexScorer Vertex connection scorer.
      * @param targetScorer Path scorer.
      */
-    public AStarPathfinder(Graph<V> graph, Scorer<V> vertexScorer, Scorer<V> targetScorer) {
+    public AStarPathfinder(Graph<V> graph, Scorer<V> vertexScorer, Scorer<V> targetScorer)
+    {
         this.graph = graph;
         this.vertexScorer = vertexScorer;
         this.targetScorer = targetScorer;
     }
 
     @Override
-    public List<V> find(V from, V to) {
+    public List<V> find(V from, V to)
+    {
         Map<V, RouteVertex<V>> rMap = new HashMap<>();
         Queue<RouteVertex<V>> set = new PriorityQueue<>();
 

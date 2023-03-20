@@ -42,7 +42,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Returns current vertex.
      * @return Current vertex.
      */
-    public V getCurrent() {
+    public V getCurrent()
+    {
         return current;
     }
 
@@ -50,7 +51,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Returns the previous vertex in the route.
      * @return The previous vertex.
      */
-    public V getPrevious() {
+    public V getPrevious()
+    {
         return previous;
     }
 
@@ -58,7 +60,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Returns the estimated score.
      * @return The estimated score.
      */
-    public double getEstimatedScore() {
+    public double getEstimatedScore()
+    {
         return eScore;
     }
 
@@ -75,7 +78,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Sets the previous vertex.
      * @param previous The previous vertex.
      */
-    public void setPrevious(V previous) {
+    public void setPrevious(V previous)
+    {
         this.previous = previous;
     }
 
@@ -83,7 +87,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Sets the route score.
      * @param rScore The route score.
      */
-    public void setRouteScore(double rScore) {
+    public void setRouteScore(double rScore)
+    {
         this.rScore = rScore;
     }
 
@@ -91,7 +96,8 @@ public class RouteVertex<V extends Vertex<V>> implements Comparable<RouteVertex<
      * Sets the estimated score.
      * @param eScore The estimated score.
      */
-    public void setEstimatedScore(double eScore) {
+    public void setEstimatedScore(double eScore)
+    {
         this.eScore = eScore;
     }
 
