@@ -63,6 +63,7 @@ public class AStarPathfinder<V extends Vertex<V>> implements Pathfinder<V>
             for (V v : graph.getVertexConnections(next.getCurrent()))
             {
                 RouteVertex<V> nextVertex = rMap.getOrDefault(v, new RouteVertex<>(v));
+                rMap.put(v, nextVertex);
                 double newScore = next.getRouteScore() + vertexScorer.score(next.getCurrent(), v);
 
                 if (newScore < nextVertex.getRouteScore())
