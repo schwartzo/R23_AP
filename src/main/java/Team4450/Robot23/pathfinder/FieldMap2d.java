@@ -114,7 +114,7 @@ public class FieldMap2d
             for (Vertex2d v : path)
             {
                 builder.add(point.getKey().copy(v.minus(start)));
-                start = point.getValue();
+                start = v;
             }
         }
         visGraph.popState();
