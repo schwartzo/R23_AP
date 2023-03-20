@@ -1,52 +1,40 @@
 package Team4450.Robot23.pathfinder;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import Team4450.Robot23.pathfinder.math.Vertex;
 
 /**
  * State for use with paths.
  * T should be the type of the implementor.
  */
-public interface State<T, U> {
-    
-    /**
-     * Gets the base of the state (e.g. a translation or a transform).
-     * @return The object that the state is based on.
-     */
-    public U base();
-
-    /**
-     * Gets the implementor instance that this method is called on.
-     * @return The implementor instance.
-     */
-    public T get();
+public interface State<T>
+{
 
     /**
      * Adds two states (used in calculations).
      * @param other The other state to add.
      * @return A new state which is the result of an addition.
      */
-    public State<T, U> plus(State<T, U> other);
+    public T plus(T other);
 
     /**
      * Subtracts two states.
      * @param other The other state which will be subtracted.
      * @return A new state which is the result of a subtraction.
      */
-    public State<T, U> minus(State<T, U> other);
+    public T minus(T other);
 
     /**
-     * Returns another state which should have the same X and Y values,
+     * Returns another state which should have the same position values,
      * other information may not be preserved. This can be used so that only
      * one state contains certain data after path computation creates more states.
-     * @return A new state instance which has the same X and Y values.
+     * @return A new state instance which has the same position values.
      */
-    public State<T, U> copy();
+    public T copy();
 
     /**
-     * Returns another state with X and Y values from a translation.
-     * @param modify The translation to use.
-     * @return A new state instance with X and Y values from the translation.
+     * Returns a vertex representing the position of the state.
+     * @return A vertex representing the position of the state.
      */
-    public State<T, U> copy(Translation2d modify);
+    public Vertex<? extends Vertex<?>> vertex();
 
 }

@@ -1,8 +1,9 @@
 package Team4450.Robot23.pathfinder;
 
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
-public interface State2d<T, U> extends State<T, U>
+public interface State2d<T> extends State<T>
 {
     
     /**
@@ -25,5 +26,25 @@ public interface State2d<T, U> extends State<T, U>
     {
         return new Translation2d(getX(), getY());
     }
+
+    @Override
+    default Vertex2d vertex()
+    {
+        return new Vertex2d(getX(), getY());
+    }
+
+    /**
+     * Returns another state with X and Y values from a vertex.
+     * @param other The vertex to use.
+     * @return A new state instance with X and Y values from the vertex.
+     */
+    public T copy(Vertex2d other);
+
+    /**
+     * Returns another state with X and Y values from a translation.
+     * @param other The translation to use.
+     * @return A new state instance with X and Y values from the translation.
+     */
+    public T copy(Translation2d other);
     
 }

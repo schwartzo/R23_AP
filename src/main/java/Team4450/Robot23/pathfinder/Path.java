@@ -1,15 +1,17 @@
 package Team4450.Robot23.pathfinder;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Path<T extends State<T, ?>> implements Iterable<T> {
+public class Path<T extends State<T>> implements Iterable<T>
+{
 
     private List<T> states;
-    private Translation2d start;
+    private Vertex2d start;
 
     private CommandSupplier<T> command;
 
@@ -19,7 +21,7 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
      * @param start Start position.
      * @param states List of states to execute.
      */
-    public Path(CommandSupplier<T> command, Translation2d start, List<T> states)
+    public Path(CommandSupplier<T> command, Vertex2d start, List<T> states)
     {
         this.command = command;
         this.states = states;
@@ -27,12 +29,41 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
     }
 
     /**
+     * Constructs a new path from another path.
+     * @param original Path to copy from.
+     */
+    public Path(Path<T> original)
+    {
+        this.states = new ArrayList<T>(original.states);
+        this.start = original.start;
+        this.command = original.command;
+    }
+
+    /**
      * Gets the starting position of the path.
      * @return Starting position of the path.
      */
-    public Translation2d start()
+    public Vertex2d start()
     {
         return start;
+    }
+
+    /**
+     * Gets the list of states used by the path.
+     * @return The list of states used by the path.
+     */
+    public List<T> states()
+    {
+        return states;
+    }
+
+    /**
+     * Gets the command supplier.
+     * @return The command supplier.
+     */
+    public CommandSupplier<T> command()
+    {
+        return command;
     }
 
     /**
@@ -121,32 +152,31 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<T> iterator()
+    {
         return states.iterator();
     }
     
     /**
-     * Constructs a sequential command group from the path.
-     * @return Instance of SequentialCommandGroup with path's states and rotation.
+     * Adds commands for path execution to a sequential command group.
+     * @param group The command group to use.
      */
-    public SequentialCommandGroup group()
+    public void group(SequentialCommandGroup group)
     {
-        SequentialCommandGroup group = new SequentialCommandGroup();
-        for (int i = 0; i < states.size() - 1; i++)
+        for (int i = 0; i < states.size(); i++)
         {
             group.addCommands(command.construct(states.get(i)));
         }
-        return group;
     }
 
     /**
      * Builder class for paths.
      */
-    public static class Builder<T extends State<T, ?>>
+    public static class Builder<T extends State<T>>
     {
 
-        private List<T> states;
-        private Translation2d start;
+        private List<T> states = new ArrayList<>();
+        private Vertex2d start;
 
         CommandSupplier<T> command;
 
@@ -155,10 +185,21 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
          * @param start Beginning of path.
          * @param end First state.
          */
-        public Builder(Translation2d start, T end)
+        public Builder(Vertex2d start, T end)
         {
             this.start = start;
-            this.states.add(end);
+            if (end != null)
+                this.states.add(end);
+        }
+        
+        /**
+         * Copies non-state parameters from another path. Only command as of now.
+         * @param original The path to copy from.
+         * @return Updated builder instance.
+         */
+        public Builder<T> blankFrom(Path<T> original)
+        {
+            return this.command(original.command());
         }
 
         /**
@@ -180,6 +221,28 @@ public class Path<T extends State<T, ?>> implements Iterable<T> {
         public Builder<T> add(T point)
         {
             states.add(point);
+            return this;
+        }
+
+        /**
+         * Adds a list of states to the path.
+         * @param points States to add.
+         * @return Updated builder instance.
+         */
+        public Builder<T> add(List<T> points)
+        {
+            states.addAll(points);
+            return this;
+        }
+
+        /**
+         * Removes a state from the path.
+         * @param i Index of state to remove.
+         * @return Updated builder instance.
+         */
+        public Builder<T> remove(int i)
+        {
+            states.remove(i);
             return this;
         }
 

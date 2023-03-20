@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import Team4450.Robot23.pathfinder.math.Graph;
+import Team4450.Robot23.pathfinder.math.MathConstants;
+import Team4450.Robot23.pathfinder.math.Pathfinder;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
+import Team4450.Robot23.pathfinder.math.astar.AStarPathfinder;
+import Team4450.Robot23.pathfinder.math.astar.EuclideanDistanceScorer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * Obstacle and path logic on a 2d map.
@@ -18,14 +22,19 @@ public class FieldMap2d
 
     private Map<String, FieldObstacleSet> obstacles = new HashMap<>();
 
+    private Graph<Vertex2d> visGraph = new Graph<>((a, b) -> checkVisibility(a, b), () -> getNewVertices());
+
     /**
      * Adds a set of obstacles to the map.
      * @param name Name of the obstacle set.
      * @param obstacleSet Obstacle set to add.
+     * @return The map instance.
      */
-    public void addObstacle(String name, FieldObstacleSet obstacleSet)
+    public FieldMap2d addObstacleSet(String name, FieldObstacleSet obstacleSet)
     {
         obstacles.put(name, obstacleSet);
+        visGraph.update(true);
+        return this;
     }
 
     /**
@@ -38,29 +47,78 @@ public class FieldMap2d
     }
 
     /**
+     * Checks if one vertex is visible from another.
+     * @param a The first vertex.
+     * @param b The second vertex.
+     * @return true if the path between the vertices is unobstructed, false otherwise.
+     */
+    public boolean checkVisibility(Vertex2d a, Vertex2d b)
+    {
+        for (Map.Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
+        {
+            if (!obstacleSet.getValue().isEnabled()) continue;
+            for (FieldObstacle obstacle : obstacleSet.getValue().get())
+            {
+                if (obstacle.check(a, b)) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Gets new vertices based on currently enabled field obstacles.
+     * @return A new list with up-to-date vertices.
+     */
+    public List<Vertex2d> getNewVertices()
+    {
+        List<Vertex2d> vertices = new ArrayList<>();
+        for (Map.Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
+        {
+            if (!obstacleSet.getValue().isEnabled()) continue;
+            for (FieldObstacle obstacle : obstacleSet.getValue().get())
+            {
+                obstacle.putVertices(vertices);
+            }
+        }
+        return vertices;
+    }
+
+    /**
      * Computes a new path which avoids mapped obstacles.
      * @param original The unmodified path.
      * @return A path which will not intersect any mapped obstacle.
      */
-    public <T extends State2d<T, ?>> Path<T> computePath(Path<T> original)
+    public <T extends State2d<T>> Path<T> computePath(Path<T> original)
     {
-        Path<T> path = original;
-        Translation2d prev = original.start();
-        for (int i = 0; i < path.size(); i++)
+        Vertex2d start = original.start();
+        Map<T, Vertex2d> points = new HashMap<>();
+        Pathfinder<Vertex2d> p = new AStarPathfinder<>(visGraph, new EuclideanDistanceScorer<Vertex2d>(), new EuclideanDistanceScorer<Vertex2d>());
+        Path.Builder<T> builder = new Path.Builder<T>(start, null).blankFrom(original);
+
+        visGraph.pushState();
+        visGraph.addVertex(start);
+        T prev = null;
+        for (T state : original)
         {
-            for (Entry<String, FieldObstacleSet> obstacleSet : obstacles.entrySet())
-            {
-                if (!obstacleSet.getValue().isEnabled()) continue;
-                for (FieldObstacle obstacle : obstacleSet.getValue().get())
-                {
-                    if (!obstacle.check(new Path.Builder<T>(prev, path.get(i)).build())) continue;
-                    path.remove(i);
-                    path.addAll(i, obstacle.path(new Path.Builder<T>(prev, path.get(i)).build()));
-                }
-            }
-            prev = path.get(i - 1).translation2d();
+            Vertex2d v = new Vertex2d(
+                    (prev == null ? original.start().getX() : prev.getX()) + state.getX(),
+                    (prev == null ? original.start().getY() : prev.getY()) + state.getY());
+            visGraph.addVertex(v);
+            points.put(state, v);
+            prev = state;
         }
-        return path;
+        visGraph.update(false);
+        for (Map.Entry<T, Vertex2d> point : points.entrySet())
+        {
+            List<Vertex2d> path = p.find(start, point.getValue());
+            for (Vertex2d v : path)
+            {
+                builder.add(point.getKey().copy(v.minus(start)));
+                start = v;
+            }
+        }
+        visGraph.popState();
+        return builder.remove(0).build();
     }
 
     public boolean isObstacleSetEnabled(String name)
@@ -71,11 +129,13 @@ public class FieldMap2d
     public void setObstacleSetEnabled(String name, boolean enabled)
     {
         obstacles.get(name).setEnabled(enabled);
+        visGraph.update(true);
     }
 
     public void toggleObstacleSet(String name)
     {
         obstacles.get(name).toggle();
+        visGraph.update(true);
     }
 
     /**
@@ -85,18 +145,25 @@ public class FieldMap2d
     {
 
         /**
-         * Creates path around an obstacle.
-         * @param original The unmodified path.
-         * @return A series of translations (first from the supplied start) which will not intersect the obstacle.
-         */
-        public <T extends State2d<T, ?>> Path<T> path(Path<T> original);
-
-        /**
          * Checks if a path intersects the obstacle.
          * @param path The path to check.
          * @return true if the path intersects the obstacle, false otherwise.
          */
-        public boolean check(Path<? extends State2d<?, ?>> path);
+        public boolean check(Path<? extends State2d<?>> path);
+
+        /**
+         * Checks if a connection between two vertices would intersect the obstacle.
+         * @param a The first vertex.
+         * @param b The second vertex.
+         * @return true if the connection would intersect the obstacle, false otherwise.
+         */
+        public boolean check(Vertex2d a, Vertex2d b);
+
+        /**
+         * Adds the vertices of the obstacle to a list.
+         * @param list The list to add the vertices to.
+         */
+        public void putVertices(List<Vertex2d> list);
 
     }
 
@@ -170,7 +237,7 @@ public class FieldMap2d
         public static class Builder
         {
             private boolean initallyEnabled;
-            private List<FieldObstacle> obstacles;
+            private List<FieldObstacle> obstacles = new ArrayList<>();
 
             /**
              * Add an obstacle.
@@ -222,92 +289,94 @@ public class FieldMap2d
     public static class PolygonObstacle implements FieldObstacle
     {
 
-        private Translation2d origin;
-        private List<Translation2d> sides;
+        private List<Vertex2d> vertices = new ArrayList<>();
 
         /**
-         * Instantiates a PolygonObstacle. Connection to origin is automatic.
-         * @param origin Origin of first side.
-         * @param sides Translation from end of last side to end of next side.
+         * Instantiates a new polygon obstacle from a list of vertices.
+         * @param vertices The vertices to use for the obstacle.
          */
-        public PolygonObstacle(Translation2d origin, Translation2d... sides)
+        public PolygonObstacle(Vertex2d... vertices)
         {
-            this.origin = origin;
-            for (Translation2d t : sides)
-                this.sides.add(t);
-            this.sides.add(origin);
+            for (Vertex2d v : vertices)
+                this.vertices.add(v);
         }
 
         /**
          * Instantiates a rectangular PolygonObstacle.
-         * @param origin Pose2d of top left corner of obstacle (assuming a rotation of 0 degrees).
-         * @param size Translation from top left corner to bottom right corner of obstacle (assuming 0 degrees rotation).
+         * @param origin Pose2d of bottom left corner of obstacle (assuming a rotation of 0 degrees).
+         * @param x Width of the obstacle (assuming no rotation).
+         * @param y Height of the obstacle (assuming no rotation).
          * @return A new rectangular PolygonObstacle.
          */
-        public PolygonObstacle rect(Pose2d origin, Translation2d size)
+        public static PolygonObstacle rect(Pose2d origin, double x, double y)
         {
-            return new PolygonObstacle(origin.getTranslation(),
-                    new Translation2d(size.getX(), origin.getRotation()),
-                    new Translation2d(size.getY(), Rotation2d.fromDegrees(90).minus(origin.getRotation())),
-                    new Translation2d(size.getX(), Rotation2d.fromDegrees(180).plus(origin.getRotation())));
+            Vertex2d v = new Vertex2d(origin.getTranslation().getX(), origin.getTranslation().getY());
+            return new PolygonObstacle(v, v.polarOffset(x, origin.getRotation().getRadians()),
+                    v.polarOffset(Math.hypot(x, y), Rotation2d.fromRadians(Math.atan(y / x)).plus(origin.getRotation()).getRadians()),
+                    v.polarOffset(y, Rotation2d.fromDegrees(90).plus(origin.getRotation()).getRadians()));
         }
 
         @Override
-        public boolean check(Path<? extends State2d<?, ?>> path)
+        public void putVertices(List<Vertex2d> list)
         {
-            Translation2d prev = origin;
-            for (Translation2d side : sides)
-            {
-                if (range(0, intersection(path.start(), path.get(0).translation2d(), prev, side), 1)) return true;
-                prev = side;
-            }
-            return false;
+            list.addAll(vertices);
         }
 
         @Override
-        public <T extends State2d<T, ?>> Path<T> path(Path<T> original)
+        public boolean check(Path<? extends State2d<?>> path)
         {
-            Path<T> path = original;
-            Translation2d prev = origin;
-            for (Translation2d side : sides)
+            int vcon = 0;
+            Vertex2d prev = vertices.get(vertices.size() - 1);
+            for (Vertex2d v : vertices)
             {
-                if (range(0, intersection(path.start(), path.get(0).translation2d(), prev, side), 1))
-                {
-                    path.add(intersection(path.start(), path.get(0).translation2d(), prev, side) < 0.5 ? path.get(0).copy(prev).get() : path.get(0).copy(side).get());
-                    break;
-                }
-                prev = side;
+                if (erange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) return true;
+                if (irange(0, intersection(path.start(), path.get(0).vertex(), prev, v), 1)) vcon++;
+                if (intersection(path.start(), path.get(0).vertex(), prev, v) == Double.NaN) vcon--;
+                prev = v;
             }
-            prev = origin;
-            for (int i = 0; i < path.size(); i++)
+            return vcon > 2;
+        }
+
+        @Override
+        public boolean check(Vertex2d a, Vertex2d b)
+        {
+            int vcon = 0;
+            Vertex2d prev = vertices.get(vertices.size() - 1);
+            for (Vertex2d v : vertices)
             {
-                if (check(new Path.Builder<T>(prev, path.get(i)).build()))
-                {
-                    path.remove(i);
-                    path.addAll(i, path(new Path.Builder<T>(prev, path.get(i)).build()));
-                }
-                prev = path.get(i).translation2d();
+                if (erange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) return true;
+                if (irange(0, intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v), 1)) vcon++;
+                if (intersection(new Vertex2d(a.getX(), a.getY()), new Vertex2d(b.getX(), b.getY()), prev, v) == Double.NaN) vcon--;
+                prev = v;
             }
-            return path;
+            return vcon > 2;
         }
 
-        private double intersection(Translation2d A, Translation2d B, Translation2d C, Translation2d D)
+        private double intersection(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
         {
-            Translation2d E = A.minus(B);
-            Translation2d F = D.minus(C);
-            Translation2d P = new Translation2d(-E.getY(), E.getX());
-            return dot(F, P) == 0 ? 0 : dot((A.minus(C)), P) / dot(F, P);
-
+            double[] h = {h(A, B, C, D), h(C, D, A, B)};
+            if (irange(0, h[0], 1) && irange(0, h[1], 1)) return h[0];
+            return Math.abs(h[0]) > Math.abs(h[1]) ? h[0] : h[1];
         }
 
-        private double dot(Translation2d a, Translation2d b)
+        private double h(Vertex2d A, Vertex2d B, Vertex2d C, Vertex2d D)
         {
-            return a.getX() * b.getX() + a.getY() * b.getY();
+            Vertex2d E = B.minus(A);
+            Vertex2d F = D.minus(C);
+            Vertex2d P = new Vertex2d(-E.getY(), E.getX());
+            return F.dot(P) == 0 ? Double.NaN : A.minus(C).dot(P) / F.dot(P);
         }
 
-        private boolean range(double min, double x, double max)
+        private boolean erange(double min, double x, double max)
         {
-            return x > min && x < max ? true : false;
+            if (Math.abs(max - x) <= MathConstants.EPSILON || Math.abs(min - x) <= MathConstants.EPSILON) return false;
+            return x > min && x < max;
+        }
+
+        private boolean irange(double min, double x, double max)
+        {
+            if (Math.abs(max - x) <= MathConstants.EPSILON || Math.abs(min - x) <= MathConstants.EPSILON) return true;
+            return x >= min && x <= max;
         }
     }
 }
