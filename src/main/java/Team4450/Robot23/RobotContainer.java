@@ -251,9 +251,9 @@ public class RobotContainer
 				winch,
 				() -> utilityPad.getRightY()));
 			
-		claw.setDefaultCommand(new ClawCommand(
-				claw,
-				() -> utilityPad.getRightX()));
+		// claw.setDefaultCommand(new ClawCommand(
+		// 		claw,
+		// 		() -> utilityPad.getRightX()));
 
 		// Start the compressor, PDP and camera feed monitoring Tasks.
 
