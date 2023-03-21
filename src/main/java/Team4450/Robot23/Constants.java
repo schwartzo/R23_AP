@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import Team4450.Lib.Util;
+import Team4450.Robot23.pathfinder.FieldMap2d;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -176,4 +177,26 @@ public final class Constants
 
   //-------------------- No student code above this line ------------------------------------------------------
 
+    public static final FieldMap2d FIELD_MAP = new FieldMap2d()
+            .addObstacleSet("ChargingStation",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(2.685, 1.185, new Rotation2d()), 3.193, 3.268))
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(10.753, 1.185, new Rotation2d()), 3.193, 3.268))
+                    .enabled()
+                    .build())
+            .addObstacleSet("CommunityLoadingRed",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(5.69, 0.92, new Rotation2d()), 1.20, 3.66))
+                    .disabled()
+                    .build())
+            .addObstacleSet("CommunityLoadingBlue",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(5.69, 0.92, new Rotation2d()), 1.20, 3.66))
+                    .disabled()
+                    .build())
+            .addObstacleSet("Preload",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(5.69, 0.92, new Rotation2d()), 1.20, 3.66))
+                        .enabled()
+                        .build());
 }
