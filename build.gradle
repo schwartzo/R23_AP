@@ -80,6 +80,15 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+
+    implementation platform("org.lwjgl:lwjgl-bom:3.3.1")
+
+	implementation "org.lwjgl:lwjgl"
+	implementation "org.lwjgl:lwjgl-glfw"
+	implementation "org.lwjgl:lwjgl-opengl"
+	runtimeOnly "org.lwjgl:lwjgl::natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
 }
 
 test {
