@@ -1,3 +1,14 @@
+import org.gradle.internal.os.OperatingSystem
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+}
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2023.4.2"
@@ -86,9 +97,9 @@ dependencies {
 	implementation "org.lwjgl:lwjgl"
 	implementation "org.lwjgl:lwjgl-glfw"
 	implementation "org.lwjgl:lwjgl-opengl"
-	runtimeOnly "org.lwjgl:lwjgl::natives-windows"
-	runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
-	runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
 }
 
 test {
