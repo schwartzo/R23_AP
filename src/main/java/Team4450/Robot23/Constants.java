@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import Team4450.Lib.Util;
+import Team4450.Robot23.pathfinder.FieldMap2d;
+import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -176,4 +178,54 @@ public final class Constants
 
   //-------------------- No student code above this line ------------------------------------------------------
 
+    public static final FieldMap2d FIELD_MAP = new FieldMap2d()
+            .addObstacleSet("ChargingStation",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(2.685, 1.185, new Rotation2d()), 3.193, 3.268))
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(10.753, 1.185, new Rotation2d()), 3.193, 3.268))
+                    .enabled()
+                    .build())
+            .addObstacleSet("CommunityLoadingRed",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(new FieldMap2d.PolygonObstacle(
+                        new Vertex2d(0, 4.650),
+                        new Vertex2d(4.408, 4.650),
+                        new Vertex2d(7.452, 6.107),
+                        new Vertex2d(7.452, 8.014),
+                        new Vertex2d(0, 8.014)
+                    ))
+                    .add(new FieldMap2d.PolygonObstacle(
+                        new Vertex2d(10.720, 0),
+                        new Vertex2d(10.720, 4.538),
+                        new Vertex2d(12.140, 4.538),
+                        new Vertex2d(12.140, 5.910),
+                        new Vertex2d(16.542, 5.910),
+                        new Vertex2d(16.542, 0)
+                    ))
+                    .disabled()
+                    .build())
+            .addObstacleSet("CommunityLoadingBlue",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(new FieldMap2d.PolygonObstacle(
+                        new Vertex2d(16.452, 4.650),
+                        new Vertex2d(16.452 - 4.408, 4.650),
+                        new Vertex2d(16.452 - 7.452, 6.107),
+                        new Vertex2d(16.452 - 7.452, 8.014),
+                        new Vertex2d(0, 8.014)
+                    ))
+                    .add(new FieldMap2d.PolygonObstacle(
+                        new Vertex2d(16.452 - 10.720, 0),
+                        new Vertex2d(16.452 - 10.720, 4.538),
+                        new Vertex2d(16.452 - 12.140, 4.538),
+                        new Vertex2d(16.452 - 12.140, 5.910),
+                        new Vertex2d(16.452 - 16.542, 5.910),
+                        new Vertex2d(16.452 - 16.542, 0)
+                    ))
+                    .disabled()
+                    .build())
+            .addObstacleSet("LargePreload",
+                new FieldMap2d.FieldObstacleSet.Builder()
+                    .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(6.400, 0, new Rotation2d()), 3.8, 5.15))
+                    .disabled()
+                    .build());
 }
