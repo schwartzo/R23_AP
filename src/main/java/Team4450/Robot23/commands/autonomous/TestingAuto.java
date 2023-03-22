@@ -108,7 +108,7 @@ public class TestingAuto extends CommandBase
 				new Vertex2d(
 					driveBase.getRobotPose().getX(),
 					driveBase.getRobotPose().getY()),
-				new StateTranslation2d(new Translation2d(10, 0)))
+				new StateTranslation2d(new Translation2d(6, 0)))
 				.command(
 					(tr) -> AutoDriveDiagonalProfiled.cartes(driveBase, tr.getX(), tr.getY(), AutoDriveDiagonalProfiled.StopMotors.stop, AutoDriveDiagonalProfiled.Brakes.on, AutoDriveDiagonalProfiled.FieldOriented.on))
 				.build();
