@@ -71,4 +71,10 @@ public class Vertex2d extends Vertex<Vertex2d>
     {
         return Math.hypot(x - other.getX(), y - other.getY());
     }
+
+    @Override
+    public String toString()
+    {
+        return Double.toString(x) + " " + Double.toString(y);
+    }
 }

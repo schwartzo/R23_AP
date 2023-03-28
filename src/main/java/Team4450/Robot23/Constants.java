@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import Team4450.Lib.Util;
+import Team4450.Robot23.pathfinder.Debug;
 import Team4450.Robot23.pathfinder.FieldMap2d;
 import Team4450.Robot23.pathfinder.math.Vertex2d;
 import edu.wpi.first.apriltag.AprilTag;
@@ -178,6 +179,16 @@ public final class Constants
 
   //-------------------- No student code above this line ------------------------------------------------------
 
+    static
+    {
+        Debug.open();
+        Debug.writeString("@color polygon_obst FF0000\n");
+        Debug.writeString("@color path         00FF00\n");
+        Debug.writeString("@color vertex_conn  0000FF\n");
+        Debug.writeString("@window 1080 520\n");
+        Debug.writeString("@mul 64\n");
+    }
+
     public static final FieldMap2d FIELD_MAP = new FieldMap2d()
             .addObstacleSet("ChargingStation",
                 new FieldMap2d.FieldObstacleSet.Builder()
@@ -228,4 +239,9 @@ public final class Constants
                     .add(FieldMap2d.PolygonObstacle.rect(new Pose2d(6.400, 0, new Rotation2d()), 3.8, 5.15))
                     .disabled()
                     .build());
+
+    static
+    {
+        Debug.close();
+    }
 }

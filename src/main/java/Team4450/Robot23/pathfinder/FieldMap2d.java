@@ -297,8 +297,14 @@ public class FieldMap2d
          */
         public PolygonObstacle(Vertex2d... vertices)
         {
+            Debug.writeString("@polygon_obst\n");
             for (Vertex2d v : vertices)
+            {
+                Debug.writeVertex("+pos ", v, "\n");
                 this.vertices.add(v);
+            }
+            Debug.writeString("+return\n");
+            Debug.writeString("$\n");
         }
 
         /**
